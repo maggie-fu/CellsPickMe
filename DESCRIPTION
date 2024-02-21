@@ -12,10 +12,16 @@ RoxygenNote: 7.3.1
 Imports: 
     ExperimentHub,
     magrittr,
-    rlang
+    methylumi,
+    minfi
 Suggests: 
     FlowSorted.Blood.450k,
     FlowSorted.Blood.EPIC,
     FlowSorted.BloodExtended.EPIC,
     FlowSorted.CordBlood.450k,
-    FlowSorted.DLPFC.450k
+    FlowSorted.DLPFC.450k,
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
+Depends: 
+    R (>= 2.10)
+LazyData: true

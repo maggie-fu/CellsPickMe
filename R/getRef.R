@@ -7,8 +7,8 @@
 #' @export
 #'
 #' @examples
-#' # Request the IDOL extended reference (2022) without normalization
-#' getRef(ref = "IDOL_extended", normType = "None")
+#' # Request the IDOL reference (2016) without normalization
+#' getRef(ref = "IDOL", normType = "None")
 #' # Request the Middleton reference (2022) normalized with functional normalization
 #' getRef(ref = "Middleton", normType = "Funnorm")
 #'
@@ -16,12 +16,14 @@ getRef <- function(ref = c("Reinius", "IDOL", "IDOL_extended", "Mixed",
                            "Cord", "DLPFC", "Middleton"),
                    normType = c("None", "Noob", "Funnorm", "Quantile")){
 
+    if (normType != "none") {
+        processMethod <- base::get(processMethod)
+    }
     hub <- ExperimentHub::ExperimentHub()
 
     ### Reinus (adult blood) reference
     if(ref == "Reinius"){
-        library(FlowSorted.Blood.450k)
-        reference <- utils::data(FlowSorted.Blood.450k)
+        reference <- FlowSorted.Blood.450k::FlowSorted.Blood.450k
         cellTypes <- c("CD8T", "CD4T", "NK", "Bcell", "Mono", "Gran")
     }
     ### IDOL (adult blood) reference
@@ -51,16 +53,21 @@ getRef <- function(ref = c("Reinius", "IDOL", "IDOL_extended", "Mixed",
     }
     ### DLPFC (brain) reference
     if(ref == "DLPFC"){
-        library(FlowSorted.DLPFC.450k)
-        reference <- FlowSorted.DLPFC.450k
+        reference <- FlowSorted.DLPFC.450k::FlowSorted.DLPFC.450k
         cellTypes <- c("NeuN_pos", "NeuN_neg")
     }
     ### Middleton (saliva) reference
     if(ref == "Saliva"){
         reference <- hub[["EH4539"]]
-        Middleton_pd <- utils::read.table("data/Middleton_pd.txt")
+        # Middleton_pd <- load("data/Middleton_pd.rda")
         Biobase::pData(reference) <- Middleton_pd
         cellTypes <- c("epithelial", "immune")
     }
+
+    ## Normalization
+    if(normType != "None") {
+        reference <- processMethod(reference)
+    }
+
     return(list(reference = reference, cellTypes = cellTypes))
 }

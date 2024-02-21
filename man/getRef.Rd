@@ -21,8 +21,8 @@ A list of the requested reference data set (RGchannelSet Object) and the cell ty
 Extract the correct reference data set
 }
 \examples{
-# Request the IDOL extended reference (2022) without normalization
-getRef(ref = "IDOL_extended", normType = "None")
+# Request the IDOL reference (2016) without normalization
+getRef(ref = "IDOL", normType = "None")
 # Request the Middleton reference (2022) normalized with functional normalization
 getRef(ref = "Middleton", normType = "Funnorm")
 

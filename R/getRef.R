@@ -1,5 +1,7 @@
 #' Extract the correct reference data set
 #'
+#' @importFrom rlang .data
+#'
 #' @param ref A character representing the reference dataset, with the options of "Reinius", "IDOL", "IDOL_extended", "Mixed", "Cord", "DLPFC", and "Middleton"
 #' @param normType a character representing the normalization method, with the options of "None", "Noob", "Funnorm", "Quantile"
 #'
@@ -9,9 +11,7 @@
 #' @examples
 #' # Request the IDOL reference (2016) without normalization
 #' getRef(ref = "IDOL", normType = "None")
-#' # Request the Middleton reference (2022) normalized with functional normalization
-#' getRef(ref = "Middleton", normType = "Funnorm")
-#'
+
 getRef <- function(ref = c("Reinius", "IDOL", "IDOL_extended", "Mixed",
                            "Cord", "DLPFC", "Middleton"),
                    normType = c("None", "Noob", "Funnorm", "Quantile")){

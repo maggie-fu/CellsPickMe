@@ -23,7 +23,4 @@ Extract the correct reference data set
 \examples{
 # Request the IDOL reference (2016) without normalization
 getRef(ref = "IDOL", normType = "None")
-# Request the Middleton reference (2022) normalized with functional normalization
-getRef(ref = "Middleton", normType = "Funnorm")
-
 }

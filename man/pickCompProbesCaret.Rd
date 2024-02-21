@@ -2,7 +2,7 @@
 % Please edit documentation in R/pickCompProbesCaret.R
 \name{pickCompProbesCaret}
 \alias{pickCompProbesCaret}
-\title{Title Pick features for cell type prediction with caret by repeated cross validation}
+\title{Pick features for cell type prediction with caret by repeated cross validation}
 \usage{
 pickCompProbesCaret(
   betas,
@@ -12,8 +12,8 @@ pickCompProbesCaret(
     "GAnSVM", "GAnNN"),
   filterK = 10000,
   seed = 1234,
-  plot = T,
-  verbose = T
+  plot = TRUE,
+  verbose = TRUE
 )
 }
 \arguments{
@@ -34,5 +34,5 @@ pickCompProbesCaret(
 \item{verbose}{A Boolean specifying whether the function should be verbose or not}
 }
 \description{
-Title Pick features for cell type prediction with caret by repeated cross validation
+Pick features for cell type prediction with caret by repeated cross validation
 }

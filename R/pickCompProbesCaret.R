@@ -1,6 +1,8 @@
-#' Title Pick features for cell type prediction with caret by repeated cross validation
+#' Pick features for cell type prediction with caret by repeated cross validation
 #'
 #' @import caret
+#' @importFrom rlang .data
+#'
 #' @param betas A beta matrix of reference DNA methylation data that will be used to select for features for cell type prediction
 #' @param meta A data frame of phenotype data, specifying which of the reference samples are of what cell types
 #' @param ct A vector of characters specifying the cell types to deconvolute
@@ -12,7 +14,7 @@
 
 pickCompProbesCaret <- function(betas, meta, ct,
                                 caretMods = c("lasso", "EL", "BLR", "CART", "RF", "GBM", "PLDA", "GAnRF", "GAnNB", "GAnSVM", "GAnNN"),
-                                filterK = 10000, seed = 1234, plot = T, verbose = T) {
+                                filterK = 10000, seed = 1234, plot = TRUE, verbose = TRUE) {
     df <- as.matrix(betas)
     pd <- as.data.frame(meta)
 
@@ -76,6 +78,17 @@ pickCompProbesCaret <- function(betas, meta, ct,
                                      sampling = "up",
                                      verboseIter = F,
                                      seeds = seedsGA2)
+    ## Setting plotting colors
+    if (plot){
+        pltct <- c(Bcell = "#980043FF", Bmem = "#CE1256FF", Bnv = "#DF65B0FF",
+                   CD4T = "#662506FF", CD4mem = "#993404FF", CD4nv = "#FE9929FF",
+                   CD8T = "#B30000FF", CD8mem = "#CB181DFF", CD8nv = "#FB6A4AFF",
+                   Treg = "#FF847CFF", Mono = "#2F8AC4", NK = "#764E9F",
+                   Gran = "#99C945", Neu = "#52BCA3", Eos = "#24796C",
+                   Bas = "#A8DDB5FF", nRBC = "#67000DFF", PBMC = "#A5AA99", WBC = "#252525FF")
+        pltct <- pltct[names(pltct) %in% ct]
+        anncolors <- list(cellType = pltct)
+    }
 
     ## Pick probes based on specified machine learning methods
     probeList <- lapply(ct, function(ctType) {
@@ -84,7 +97,7 @@ pickCompProbesCaret <- function(betas, meta, ct,
         ctIndex[x] <- "Y"
         ctIndex <- as.factor(ctIndex)
         tout <- genefilter::rowttests(df, ctIndex)
-        tout.top <- rownames(tout)[order(tout$p.value, decreasing = F)][1:filtern] # pick filtern number of probes as the first pass
+        tout.top <- rownames(tout)[order(tout$p.value, decreasing = F)][1:filterK] # pick filterK number of probes as the first pass
         df <- df[tout.top, ] %>% t()
 
         out <- vector(mode = 'list', length = length(caretMods) + 1)
@@ -103,7 +116,7 @@ pickCompProbesCaret <- function(betas, meta, ct,
                                      tuneGrid = lassotune,
                                      trControl = control10)
             if(verbose) cat(paste0("Number of features selected by lasso for ", ctType, ": ", length(caret::predictors(lassoout)), "\n"))
-            if (plot & length(caret::predictors(lassoout)) > 0){
+            if (plot & length(caret::predictors(lassoout)) > 1){
                 plt <- t(df)
                 pheatmap::pheatmap(plt[rownames(plt) %in% caret::predictors(lassoout), ],
                                    show_colnames = F,
@@ -128,7 +141,7 @@ pickCompProbesCaret <- function(betas, meta, ct,
                                   tuneGrid = ELtune,
                                   trControl = control10)
             if(verbose) cat(paste0("Number of features selected by EL for ", ctType, ": ", length(caret::predictors(ELout)), "\n"))
-            if (plot & length(caret::predictors(ELout)) > 0){
+            if (plot & length(caret::predictors(ELout)) > 1){
                 plt <- t(df)
                 pheatmap::pheatmap(plt[rownames(plt) %in% caret::predictors(ELout), ],
                                    show_colnames = F,
@@ -153,7 +166,7 @@ pickCompProbesCaret <- function(betas, meta, ct,
                                   tuneGrid = RFtune,
                                   trControl = control10)
             if(verbose) cat(paste0("Number of features selected by RF for ", ctType, ": ", length(caret::predictors(RFout)), "\n"))
-            if (plot & length(caret::predictors(RFout)) > 0){
+            if (plot & length(caret::predictors(RFout)) > 1){
                 plt <- t(df)
                 pheatmap::pheatmap(plt[rownames(plt) %in% caret::predictors(RFout), ],
                                    show_colnames = F,
@@ -177,7 +190,7 @@ pickCompProbesCaret <- function(betas, meta, ct,
                                    tuneLength = 5,
                                    trControl = control5)
             if(verbose) cat(paste0("Number of features selected by BLR for ", ctType, ": ", length(caret::predictors(BLRout)), "\n"))
-            if (plot & length(caret::predictors(BLRout)) > 0){
+            if (plot & length(caret::predictors(BLRout)) > 1){
                 plt <- t(df)
                 pheatmap::pheatmap(plt[rownames(plt) %in% caret::predictors(BLRout), ],
                                    show_colnames = F,
@@ -200,7 +213,7 @@ pickCompProbesCaret <- function(betas, meta, ct,
                                     tuneLength = 5,
                                     trControl = control5)
             if(verbose) cat(paste0("Number of features selected by CART for ", ctType, ": ", length(caret::predictors(CARTout)), "\n"))
-            if (plot & length(caret::predictors(CARTout)) > 0){
+            if (plot & length(caret::predictors(CARTout)) > 1){
                 plt <- t(df)
                 pheatmap::pheatmap(plt[rownames(plt) %in% caret::predictors(CARTout), ],
                                    show_colnames = F,
@@ -223,7 +236,7 @@ pickCompProbesCaret <- function(betas, meta, ct,
                                    metric = "Accuracy",
                                    trControl = control400)
             if(verbose) cat(paste0("Number of features selected by GBM for ", ctType, ": ", length(caret::predictors(GBMout)), "\n"))
-            if (plot & length(caret::predictors(GBMout)) > 0){
+            if (plot & length(caret::predictors(GBMout)) > 1){
                 plt <- t(df)
                 pheatmap::pheatmap(plt[rownames(plt) %in% caret::predictors(GBMout), ],
                                    show_colnames = F,
@@ -247,7 +260,7 @@ pickCompProbesCaret <- function(betas, meta, ct,
                             tuneLength = 5,
                             trControl = control5)
             if(verbose) cat(paste0("Number of features selected by PLDA for ", ctType, ": ", length(caret::predictors(PLDAout)), "\n"))
-            if (plot & length(caret::predictors(PLDAout)) > 0){
+            if (plot & length(caret::predictors(PLDAout)) > 1){
                 plt <- t(df)
                 pheatmap::pheatmap(plt[rownames(plt) %in% caret::predictors(PLDAout), ],
                                    show_colnames = F,
@@ -275,12 +288,12 @@ pickCompProbesCaret <- function(betas, meta, ct,
                                     gafsControl = gafsControl(method = "LOOCV",
                                                               functions = caretGA,
                                                               seeds = seedsGA,
-                                                              verbose = T),
+                                                              verbose = TRUE),
                                     method = "nnet",
                                     tuneLength = 3,
                                     trControl = control9)
             if(verbose) cat(paste0("Number of features selected by GAnNN for ", ctType, ": ", length(caret::predictors(GAnNNout)), "\n"))
-            if (plot & length(caret::predictors(GAnNNout)) > 0){
+            if (plot & length(caret::predictors(GAnNNout)) > 1){
                 plt <- t(df)
                 pheatmap::pheatmap(plt[rownames(plt) %in% caret::predictors(GAnNNout), ],
                                    show_colnames = F,
@@ -312,7 +325,7 @@ pickCompProbesCaret <- function(betas, meta, ct,
                                     tuneLength = 3,
                                     trControl = controlGA)
             if(verbose) cat(paste0("Number of features selected by GAnNB for ", ctType, ": ", length(caret::predictors(GAnNBout)), "\n"))
-            if (plot & length(caret::predictors(GAnNBout)) > 0){
+            if (plot & length(caret::predictors(GAnNBout)) > 1){
                 plt <- t(df)
                 pheatmap::pheatmap(plt[rownames(plt) %in% caret::predictors(GAnNBout), ],
                                    show_colnames = F,
@@ -344,7 +357,7 @@ pickCompProbesCaret <- function(betas, meta, ct,
                                      tuneLength = 3,
                                      trControl = controlGA)
             if(verbose) cat(paste0("Number of features selected by GAnSVM for ", ctType, ": ", length(caret::predictors(GAnSVMout)), "\n"))
-            if (plot & length(caret::predictors(GAnSVMout)) > 0){
+            if (plot & length(caret::predictors(GAnSVMout)) > 1){
                 plt <- t(df)
                 pheatmap::pheatmap(plt[rownames(plt) %in% caret::predictors(GAnSVMout), ],
                                    show_colnames = F,
@@ -368,17 +381,17 @@ pickCompProbesCaret <- function(betas, meta, ct,
                                     method = "rf",
                                     tuneLength = 3,
                                     trControl = controlGA)
-            if(verbose) cat(paste0("Number of features selected by RFE+RF for ", ctType, ": ", length(caret::predictors(RFEnRFout)), "\n"))
-            if (plot & length(caret::predictors(RFEnRFout)) > 0){
+            if(verbose) cat(paste0("Number of features selected by GAnRF for ", ctType, ": ", length(caret::predictors(GAnRFout)), "\n"))
+            if (plot & length(caret::predictors(GAnRFout)) > 1){
                 plt <- t(df)
-                pheatmap::pheatmap(plt[rownames(plt) %in% caret::predictors(RFEnRFout), ],
+                pheatmap::pheatmap(plt[rownames(plt) %in% caret::predictors(GAnRFout), ],
                                    show_colnames = F,
                                    show_rownames = F,
                                    annotation_col = pd[, "cellType", drop = F],
                                    annotation_colors = anncolors,
                                    main = paste0("genetic algorithm + random forest - ", ctType))
             }
-            out[["RFEnRFout"]] <- list(coefs = caret::predictors(RFEnRFout), performance = RFEnRFout$resample)
+            out[["GAnRF"]] <- list(coefs = caret::predictors(GAnRFout), performance = GAnRFout$resample)
         }
         # Compare performance
         # tests <- ls()[ls() %in% paste0(caretMods, "out")]
@@ -412,7 +425,7 @@ pickCompProbesCaret <- function(betas, meta, ct,
     form <- stats::as.formula(sprintf("bt ~ %s - 1", paste(ct, collapse = " + ")))
     coefComb <- sapply(1:nrow(dfComb), function(probe){
         mod$bt <- df[probe, ]
-        fit <- stats::lm(form, data = mod[complete.cases(mod), ]) # Remove samples with missing methylation values
+        fit <- stats::lm(form, data = mod[stats::complete.cases(mod), ]) # Remove samples with missing methylation values
         fitCoef <- fit$coef
         return(fitCoef)
     }) %>% t() %>% as.data.frame()
@@ -431,7 +444,7 @@ pickCompProbesCaret <- function(betas, meta, ct,
         form <- stats::as.formula(sprintf("bt ~ %s - 1", paste(ct, collapse = " + ")))
         coef <- sapply(1:nrow(df), function(probe){
             mod$bt <- df[probe, ]
-            fit <- stats::lm(form, data = mod[complete.cases(mod), ]) # Remove samples with missing methylation values
+            fit <- stats::lm(form, data = mod[stats::complete.cases(mod), ]) # Remove samples with missing methylation values
             fitCoef <- fit$coef
             return(fitCoef)
         }) %>% t() %>% as.data.frame()
@@ -441,29 +454,6 @@ pickCompProbesCaret <- function(betas, meta, ct,
     names(probeCoefs) <- caretMods
     probeCoefs[["combined"]] <- coefComb
 
-    ## Plotting
-    if (plot){
-        pltct <- c(Bcell = "#980043FF", Bmem = "#CE1256FF", Bnv = "#DF65B0FF",
-                   CD4T = "#662506FF", CD4mem = "#993404FF", CD4nv = "#FE9929FF",
-                   CD8T = "#B30000FF", CD8mem = "#CB181DFF", CD8nv = "#FB6A4AFF",
-                   Treg = "#FF847CFF", Mono = "#2F8AC4", NK = "#764E9F",
-                   Gran = "#99C945", Neu = "#52BCA3", Eos = "#24796C",
-                   Bas = "#A8DDB5FF", nRBC = "#67000DFF", PBMC = "#A5AA99", WBC = "#252525FF")
-        pltct <- pltct[names(pltct) %in% ct]
-        anncolors <- list(cellType = pltct)
-
-        plt <- lapply(names(probeCoefs), function(caretMods){
-            coef <- probeCoefs[[caretMods]]
-            pheatmap::pheatmap(df[rownames(df) %in% rownames(coef), ],
-                               show_colnames = F,
-                               show_rownames = F,
-                               annotation_col = pd[, "cellType", drop = F],
-                               annotation_colors = anncolors,
-                               main = caretMods)
-        })
-        return(list(probeCoefs = probeCoefs, probeList = probeList, plots = plt))
-    } else {
-        return(list(probeCoefs = probeCoefs, probeList = probeList))
-    }
+    return(list(probeCoefs = probeCoefs, probeList = probeList))
 
 }

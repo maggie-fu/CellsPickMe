@@ -2,7 +2,7 @@
 % Please edit documentation in R/combData.R
 \name{combData}
 \alias{combData}
-\title{Title Combine reference and user's sample data sets together}
+\title{Combine reference and user's sample data sets together}
 \usage{
 combData(
   dataset,
@@ -11,7 +11,7 @@ combData(
   normType = c("Noob", "Funnorm", "Quantile", "Quantile.b", "None"),
   cellTypes = c("Bas", "Bmem", "Bnv", "CD4mem", "CD4nv", "CD8mem", "CD8nv", "Eos",
     "Mono", "Neu", "NK", "Treg"),
-  verbose = T
+  verbose = TRUE
 )
 }
 \arguments{
@@ -31,7 +31,7 @@ combData(
 A list of dataframes, including the sample and reference data post normalization, their pheno data, and the cell type information
 }
 \description{
-Title Combine reference and user's sample data sets together
+Combine reference and user's sample data sets together
 }
 \examples{
 # Load example blood cell mixture, subsetted from the IDOL dataset (GSE110554)

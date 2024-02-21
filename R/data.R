@@ -21,7 +21,7 @@
 #' This data contains the cell type label of the Middleton saliva reference, allowing for usability of the `getRef()` function when Middleton reference is called.
 #' The data is extracted from GSE147318, a dataset created and published by Middleton et al. Please cite the following if using this data.
 #' Middleton LYM, Dou J, Fisher J, Heiss JA et al. Saliva cell type DNA methylation reference panel for epidemiological studies in children. Epigenetics 2022 Jan-Feb;17(2):161-177. PMID: 33588693
-
+#'
 #' @source <https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE147318>
 "Middleton_pd"
 
@@ -34,7 +34,7 @@
 #' A vector of characters of length 350
 #' The data is obtained from a publication by Salas et al. Please cite the following if using this data.
 #' Salas LA, Koestler DC, Butler RA, Hansen HM et al. An optimized library for reference-based deconvolution of whole-blood biospecimens assayed using the Illumina HumanMethylationEPIC BeadArray. Genome Biol 2018 May 29;19(1):64. PMID: 29843789
-
+#'
 #' @source <https://pubmed.ncbi.nlm.nih.gov/29843789/>
 "idol.a_450"
 
@@ -46,7 +46,7 @@
 #' A vector of characters of length 450
 #' The data is obtained from a publication by Salas et al. Please cite the following if using this data.
 #' Salas LA, Koestler DC, Butler RA, Hansen HM et al. An optimized library for reference-based deconvolution of whole-blood biospecimens assayed using the Illumina HumanMethylationEPIC BeadArray. Genome Biol 2018 May 29;19(1):64. PMID: 29843789
-
+#'
 #' @source <https://pubmed.ncbi.nlm.nih.gov/29843789/>
 "idol.a_EPIC"
 
@@ -70,6 +70,6 @@
 #' A vector of characters of length 517
 #' The data is obtained from a publication by Gervin et al.. Please cite the following if using this data.
 #' Gervin, K., Salas, L. A., Bakulski, K. M., Van Zelm, M. C., Koestler, D. C., Wiencke, J. K., ... & Jones, M. J. (2019). Systematic evaluation and validation of reference and library selection methods for deconvolution of cord blood DNA methylation data. Clinical epigenetics, 11(1), 1-15.
-
+#'
 #' @source <https://pubmed.ncbi.nlm.nih.gov/29843789/>
 "idol.c"

@@ -2,7 +2,7 @@
 % Please edit documentation in R/pickProbes.R
 \name{pickProbes}
 \alias{pickProbes}
-\title{Title Pick features for cell type prediction}
+\title{Pick features for cell type prediction}
 \usage{
 pickProbes(
   dataNormed,
@@ -15,14 +15,14 @@ pickProbes(
   p.val = 0.05,
   min.delta.beta = 0,
   filterK = 1000,
-  plotRef,
-  verbose = T
+  plotRef = TRUE,
+  verbose = TRUE
 )
 }
 \arguments{
 \item{dataNormed}{A list of dataframe containing the normalized data, output of \code{combData()}}
 
-\item{probeList}{A character, specifying how the probe should be selected. Options include "Ttest", "Caret_CV", "Caret_LOOCV", "IDOL", and "DHS"}
+\item{probeList}{A character, specifying how the probe should be selected. Options include "Ttest", "Caret_CV", "Caret_LOOCV", and "IDOL"}
 
 \item{probeSelect}{If \code{probeSelect = Ttest}, specify how should the top probes be picked from T test output, options include "both", "any", "pval"}
 
@@ -46,5 +46,15 @@ pickProbes(
 A list containing the features selected by the specified methods, and the coefficients of the selected probes for downstream prediction
 }
 \description{
-Title Pick features for cell type prediction
+Pick features for cell type prediction
+}
+\examples{
+# Load example blood cell mixture, subsetted from the IDOL dataset (GSE110554)
+test_dat <- CellsPickMe::IDOL_mixed_cells
+# Obtain reference data set with the `getRef()` function
+ref_dat <- getRef(ref = "IDOL", normType = "None")
+# Combine sample and reference data sets together, followed by normalization (if selected)
+comb_dat <- combData(dataset = test_dat, reference = ref_dat$reference, class = "rgset", normType = "None", cellTypes = ref_dat$cellTypes)
+# Pick probes with repeated cross validation with lasso and elastic net
+probes <- pickProbes(dataNormed = comb_dat, probeList = "Caret_CV", caretMods = c("lasso", "EL"), filterK = 1000, seed = 1)
 }

@@ -11,19 +11,14 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.1
 Imports: 
     caret,
-    doParallel,
     ExperimentHub,
     genefilter,
-    ggplot2,
-    glmnet,
-    IlluminaHumanMethylation450kmanifest,
-    IlluminaHumanMethylationEPICmanifest,
     magrittr,
     MASS,
     methylumi,
     minfi,
     pheatmap,
-    pvclust,
+    rlang,
     stats
 Suggests: 
     caTools,
@@ -32,6 +27,7 @@ Suggests:
     FlowSorted.Blood.EPIC,
     FlowSorted.CordBlood.450k,
     FlowSorted.DLPFC.450k,
+    glmnet,
     kernlab,
     klaR,
     naivebayes,
@@ -39,7 +35,6 @@ Suggests:
     quadprog,
     rpart,
     rqPen,
-    testthat (>= 3.0.0),
     xgboost
 Config/testthat/edition: 3
 Depends: 

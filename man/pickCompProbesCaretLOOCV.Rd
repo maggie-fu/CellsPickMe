@@ -2,7 +2,7 @@
 % Please edit documentation in R/pickCompProbesCaretLOOCV.R
 \name{pickCompProbesCaretLOOCV}
 \alias{pickCompProbesCaretLOOCV}
-\title{Title Pick features for cell type prediction with caret by LOOCV}
+\title{Pick features for cell type prediction with caret by LOOCV}
 \usage{
 pickCompProbesCaretLOOCV(
   betas,
@@ -12,8 +12,8 @@ pickCompProbesCaretLOOCV(
     "GAnSVM", "GAnNN"),
   filterK = 10000,
   seed = 1234,
-  plot = T,
-  verbose = T
+  plot = TRUE,
+  verbose = TRUE
 )
 }
 \arguments{
@@ -34,5 +34,5 @@ pickCompProbesCaretLOOCV(
 \item{verbose}{A Boolean specifying whether the function should be verbose or not}
 }
 \description{
-Title Pick features for cell type prediction with caret by LOOCV
+Pick features for cell type prediction with caret by LOOCV
 }

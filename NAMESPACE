@@ -3,5 +3,8 @@
 export("%>%")
 export(combData)
 export(getRef)
+export(pickProbes)
+export(predictCT)
 import(caret)
 importFrom(magrittr,"%>%")
+importFrom(rlang,.data)

@@ -1,4 +1,4 @@
-#' Title Combine reference and user's sample data sets together
+#' Combine reference and user's sample data sets together
 #'
 #' @param dataset An RGchannelSet or a beta matrix of the users' DNA methylation data set
 #' @param reference An RGchannelSet of the reference DNA methylation data set, preferentially the output from the `getRef()` function, to ensure the `pData()` formatting is appropriate
@@ -22,7 +22,7 @@ combData <- function(dataset, reference, class = c("rgset", "betas"),
                      normType = c("Noob", "Funnorm", "Quantile", "Quantile.b", "None"),
                      cellTypes = c("Bas", "Bmem", "Bnv", "CD4mem", "CD4nv", "CD8mem",
                                    "CD8nv", "Eos", "Mono", "Neu", "NK", "Treg"),
-                     verbose = T) {
+                     verbose = TRUE) {
 
     if (!normType %in% c("Noob", "Funnorm", "Quantile", "Quantile.b", "None")) {
         stop("Please specify one of the available normalization methods")
@@ -85,7 +85,7 @@ combData <- function(dataset, reference, class = c("rgset", "betas"),
 
         } else { # Combine all the datasets and normalize
             if(min(nrow(dataset), nrow(reference)) > 622400) {
-                combRGset <- combineArrays(dataset, reference, outType = "IlluminaHumanMethylationEPIC")
+                combRGset <- minfi::combineArrays(dataset, reference, outType = "IlluminaHumanMethylationEPIC")
             } else {
                 combRGset <- minfi::combineArrays(dataset, reference, outType = "IlluminaHumanMethylation450k")
             }

@@ -1,6 +1,6 @@
 ##############################################################################################################
 
-pickCompProbessplitit <- function(x) {
+splitit <- function(x) {
     split(seq(along = x), x)
 }
 

@@ -16,7 +16,17 @@ getRef <- function(ref = c("Reinius", "IDOL", "IDOL_extended", "Mixed",
                            "Cord", "DLPFC", "Middleton"),
                    normType = c("None", "Noob", "Funnorm", "Quantile")){
 
-    if (normType != "none") {
+    if (!normType %in% c("Noob", "Funnorm", "Quantile", "None")) {
+        stop("Please specify one of the available normalization methods")
+    } else if (normType == "Funnorm") {
+        processMethod <- "preprocessFunnorm"
+    } else if (normType == "Noob") {
+        processMethod <- "preprocessNoob"
+    } else if (normType == "Quantile") {
+        processMethod <- "preprocessQuantile"
+    }
+
+    if (normType != "None") {
         processMethod <- base::get(processMethod)
     }
     hub <- ExperimentHub::ExperimentHub()
@@ -29,7 +39,7 @@ getRef <- function(ref = c("Reinius", "IDOL", "IDOL_extended", "Mixed",
     ### IDOL (adult blood) reference
     if(ref == "IDOL"){
         reference <- hub[["EH1136"]]
-        Biobase::pData(reference)$CellType <- Biobase::pData(reference)$CellType %>%
+        minfi::pData(reference)$CellType <- minfi::pData(reference)$CellType %>%
             gsub("Neu", "Gran", .)
         cellTypes <- c("CD8T", "CD4T", "NK", "Bcell", "Mono", "Gran")
     }
@@ -42,7 +52,7 @@ getRef <- function(ref = c("Reinius", "IDOL", "IDOL_extended", "Mixed",
     ### Cord (cord blood) reference
     if(ref == "Cord"){
         reference <- hub[["EH2256"]]
-        Biobase::pData(reference)$CellType <- Biobase::pData(reference)$CellType %>%
+        minfi::pData(reference)$CellType <- minfi::pData(reference)$CellType %>%
             gsub("WholeBlood", "WB", .)
         cellTypes <- c("CD8T", "CD4T", "NK", "Bcell", "Mono", "Gran", "nRBC")
     }
@@ -59,8 +69,7 @@ getRef <- function(ref = c("Reinius", "IDOL", "IDOL_extended", "Mixed",
     ### Middleton (saliva) reference
     if(ref == "Saliva"){
         reference <- hub[["EH4539"]]
-        # Middleton_pd <- load("data/Middleton_pd.rda")
-        Biobase::pData(reference) <- Middleton_pd
+        minfi::pData(reference) <- Middleton_pd
         cellTypes <- c("epithelial", "immune")
     }
 

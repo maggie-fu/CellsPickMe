@@ -3,4 +3,5 @@
 export("%>%")
 export(combData)
 export(getRef)
+import(caret)
 importFrom(magrittr,"%>%")

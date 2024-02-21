@@ -10,17 +10,37 @@ Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.1
 Imports: 
+    caret,
+    doParallel,
     ExperimentHub,
+    genefilter,
+    ggplot2,
+    glmnet,
+    IlluminaHumanMethylation450kmanifest,
+    IlluminaHumanMethylationEPICmanifest,
     magrittr,
+    MASS,
     methylumi,
-    minfi
+    minfi,
+    pheatmap,
+    pvclust,
+    stats
 Suggests: 
+    caTools,
+    e1071,
     FlowSorted.Blood.450k,
     FlowSorted.Blood.EPIC,
-    FlowSorted.BloodExtended.EPIC,
     FlowSorted.CordBlood.450k,
     FlowSorted.DLPFC.450k,
-    testthat (>= 3.0.0)
+    kernlab,
+    klaR,
+    naivebayes,
+    nnet,
+    quadprog,
+    rpart,
+    rqPen,
+    testthat (>= 3.0.0),
+    xgboost
 Config/testthat/edition: 3
 Depends: 
     R (>= 2.10)

@@ -8,7 +8,7 @@ combData(
   dataset,
   reference,
   class = c("rgset", "betas"),
-  normType = c("Noob", "Funnorm", "Quantile", "Quantile.b", "none"),
+  normType = c("Noob", "Funnorm", "Quantile", "Quantile.b", "None"),
   cellTypes = c("Bas", "Bmem", "Bnv", "CD4mem", "CD4nv", "CD8mem", "CD8nv", "Eos",
     "Mono", "Neu", "NK", "Treg"),
   verbose = T
@@ -21,23 +21,23 @@ combData(
 
 \item{class}{A character specifying the argument \code{dataset}'s class, with the option or rgset (for RGChannelSet) or betas (for beta matrix)}
 
-\item{normType}{A character specifying the method for normalizing user sample and reference data sets together, with the options of "Noob", "Funnorm", "Quantile", "Quantile.b", and "none" -- refer to the Details section for more information on the options.}
+\item{normType}{A character specifying the method for normalizing user sample and reference data sets together, with the options of "Noob", "Funnorm", "Quantile", "Quantile.b", and "None" -- refer to the Details section for more information on the options.}
 
 \item{cellTypes}{A vector of characters specifying the cell types to be estimated. If the \code{getRef()} function was used, use the output as shown in the Example.}
 
 \item{verbose}{A Boolean, specifying whether the function should be verbose}
 }
 \value{
-A beta matrix of
+A list of dataframes, including the sample and reference data post normalization, their pheno data, and the cell type information
 }
 \description{
 Title Combine reference and user's sample data sets together
 }
 \examples{
 # Load example blood cell mixture, subsetted from the IDOL dataset (GSE110554)
-test_dat <- IDOL_mixed_cells
+test_dat <- CellsPickMe::IDOL_mixed_cells
 # Obtain reference data set with the `getRef()` function
 ref_dat <- getRef(ref = "IDOL", normType = "None")
 # Combine sample and reference data sets together, followed by normalization (if selected)
-comb_dat <- combData(dataset = test_dat, reference = ref_dat$reference, class = "rgset", normType = "none", cellTypes = ref_dat$cellTypes)
+comb_dat <- combData(dataset = test_dat, reference = ref_dat$reference, class = "rgset", normType = "None", cellTypes = ref_dat$cellTypes)
 }

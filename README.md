@@ -15,11 +15,6 @@ heterogeneity is also vital in epigenome-wide association studies (EWAS)
 to accurately evaluate the signals associated with the variables of
 interest.
 
-The main purpose of the RAMEN package is to conduct a methylome-wide
-analysis to identify which model (G, E, G+E or GxE) better explains the
-variability across the genome. In this vignette, we will illustrate how
-to use the package.
-
 ## Installation
 
 You can install the development version of CellsPickMe from

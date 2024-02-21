@@ -13,6 +13,7 @@ Imports:
     caret,
     ExperimentHub,
     genefilter,
+    IlluminaHumanMethylationEPICanno.ilm10b4.hg19,
     magrittr,
     MASS,
     methylumi,

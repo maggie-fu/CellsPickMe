@@ -26,7 +26,7 @@ The main purpose of the RAMEN package is to conduct a methylome-wide analysis to
 
 You can install the development version of CellsPickMe from [GitHub](https://github.com/) with:
 
-```{r install, eval = FALSE}
+```{r install, eval = F}
 # install.packages("devtools")
 library(devtools)
 devtools::install_github("maggie-fu/CellsPickMe")
@@ -40,7 +40,7 @@ The **CellsPickMe** package takes DNA methylation data generated from Illumina m
 
 From the available list of reference datasets ("Reinius", "IDOL", "IDOL_extended", "Mixed", "Cord", "DLPFC", and "Middleton"), select one that is appropriate for your sample (based on tissue and sample age)
 
-```{r getRef, eval = FALSE}
+```{r getRef}
 library(CellsPickMe)
 
 # Request the IDOL reference (2016) with no normalization
@@ -51,7 +51,7 @@ ref_dat <- getRef(ref = "IDOL", normType = "None")
 
 Normalize user's sample and reference data sets together to reduce batch effect and improve prediction accuracy
 
-```{r combData, eval = FALSE}
+```{r combData}
 # Load example blood cell mixture, subsetted from the IDOL dataset (GSE110554)
 test_dat <- CellsPickMe::IDOL_mixed_cells
  
@@ -68,20 +68,20 @@ comb_dat <- combData(dataset = test_dat,
 
 The **CellsPickMe** package supports feature selection with either the traditional T-test, or with machine-learning-based methods such as elastic net and random forest to obtain a curated list of features that are highly predictive of cell types
 
-```{r pickProbes, eval = FALSE}
+```{r pickProbes}
 # Pick probes with T tests
 probes <- pickProbes(dataNormed = comb_dat, 
-                     probeList = "Ttest", #c("Ttest", "Caret", "IDOL", "DHS")
+                     probeList = "Ttest", #c("Ttest", "IDOL", "DHS")
                      probeSelect = "both", #c("both", "any", "pval")
                      nProbes = 100, # number of probes to pick for each cell type
                      p.val = 0.05,  # max pval
                      min.delta.beta = 0.05, # min delta beta
-                     plotRef = F, # plot heatmap?
+                     plotRef = T, # plot heatmap?
                      verbose = T)
 
-### Set up server for parallelization - run the code if picking probes with Caret or doing pvClust
+### Set up server for parallelization - run the code if picking probes with Caret
 library(doParallel)
-cl <- makeCluster(10) # change as needed
+cl <- makeCluster(detectCores() - 1) # change as needed
 registerDoParallel(cl)
 
 # Pick probes with repeated cross validation with lasso and elastic net
@@ -90,7 +90,7 @@ probes <- pickProbes(dataNormed = comb_dat,
                      caretMods = c("lasso", "EL"),  #c("lasso", "EL", "BLR", "CART", "RF", "GBM", "PLDA", "GAnRF", "GAnNB", "GAnSVM", "GAnNN")
                      filterK = 1000, # number of probes to put into the predictor for each cell type
                      seed = 1, 
-                     plotRef = T, # plot heatmap?
+                     plotRef = F, # plot heatmap?
                      verbose = T)
 ```
 
@@ -98,23 +98,17 @@ probes <- pickProbes(dataNormed = comb_dat,
 
 To further evaluate the performance of the selected probes, pvClust can be applied to assess whether the picked probes can be used to generate the correct cluster (cell type labeling) in reference data
 
-```{r pvclust, eval = FALSE}
-clustout <- pvclust(comb_dat$ref.n[rownames(probes$coefs$probeCoefs$lasso), ], parallel = cl)
-pvClust <- hc2split(clustout$hclust)$member
-ctClust <- sapply(ref$cellTypes, function(x){ # can be replaced with user cellTypes arguments
-    return(which(comb_dat$refMeta$cellType == x))
-}) 
-identClust <- lapply(ctClust, function(ct){
-    y <- sapply(pvClust, function(x){identical(x, ct)}) %>% which(.)
-    return(clustout$edges[y, ])
-})
+```{r pvclust}
+clustAU <- identClust(dataNormed = comb_dat,
+                      probes = probes,
+                      parallel = TRUE)
 ```
 
 ### Estimate cell type proportion
 
 Finally, the selected features are used to estimate cell type proportions in the sample data set. We also incorporate the CETYGO score (see Reference) to estimate prediction performance even in the absence of a validation cohort / ground truth cell count.
 
-```{r predictCT, eval = FALSE}
+```{r predictCT}
 out <- predictCT(dataNormed = comb_dat, 
                  probes = probes, 
                  method = "CP",  #c("CP", "RPC", "SVR")

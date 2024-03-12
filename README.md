@@ -50,6 +50,8 @@ library(CellsPickMe)
 
 # Request the IDOL reference (2016) with no normalization
 ref_dat <- getRef(ref = "IDOL", normType = "None")
+#> see ?FlowSorted.Blood.EPIC and browseVignettes('FlowSorted.Blood.EPIC') for documentation
+#> loading from cache
 ```
 
 ### Normalize sample and reference datasets together
@@ -67,6 +69,9 @@ comb_dat <- combData(dataset = test_dat,
                      class = "rgset", 
                      normType = "Noob", 
                      cellTypes = ref_dat$cellTypes)
+#> Combining Data with Flow Sorted Data and Normalizing.
+#> Loading required package: IlluminaHumanMethylationEPICmanifest
+#> Loading required package: IlluminaHumanMethylationEPICanno.ilm10b4.hg19
 ```
 
 ### Pick features that best distinguish cell type
@@ -79,17 +84,23 @@ are highly predictive of cell types
 ``` r
 # Pick probes with T tests
 probes <- pickProbes(dataNormed = comb_dat, 
-                     probeList = "Ttest", #c("Ttest", "Caret", "IDOL", "DHS")
+                     probeList = "Ttest", #c("Ttest", "IDOL", "DHS")
                      probeSelect = "both", #c("both", "any", "pval")
                      nProbes = 100, # number of probes to pick for each cell type
                      p.val = 0.05,  # max pval
                      min.delta.beta = 0.05, # min delta beta
-                     plotRef = F, # plot heatmap?
+                     plotRef = T, # plot heatmap?
                      verbose = T)
+#> Estimating Weights for Cell Type Prediction Based on Selected Probeset.
+```
 
-### Set up server for parallelization - run the code if picking probes with Caret or doing pvClust
+<img src="man/figures/README-pickProbes-1.png" width="100%" />
+
+``` r
+
+### Set up server for parallelization - run the code if picking probes with Caret
 library(doParallel)
-cl <- makeCluster(10) # change as needed
+cl <- makeCluster(detectCores() - 1) # change as needed
 registerDoParallel(cl)
 
 # Pick probes with repeated cross validation with lasso and elastic net
@@ -98,8 +109,58 @@ probes <- pickProbes(dataNormed = comb_dat,
                      caretMods = c("lasso", "EL"),  #c("lasso", "EL", "BLR", "CART", "RF", "GBM", "PLDA", "GAnRF", "GAnNB", "GAnSVM", "GAnNN")
                      filterK = 1000, # number of probes to put into the predictor for each cell type
                      seed = 1, 
-                     plotRef = T, # plot heatmap?
+                     plotRef = F, # plot heatmap?
                      verbose = T)
+#> Estimating Weights for Cell Type Prediction Based on Selected Probeset.
+#> Loading required namespace: glmnet
+#> Running lasso for feature selection of CD8T.
+#> Warning in lognet(xd, is.sparse, ix, jx, y, weights, offset, alpha, nobs, : one
+#> multinomial or binomial class has fewer than 8 observations; dangerous ground
+#> Number of features selected by lasso for CD8T: 2
+#> Running elastic net (EL) for feature selection of CD8T.
+#> Warning in lognet(xd, is.sparse, ix, jx, y, weights, offset, alpha, nobs, : one
+#> multinomial or binomial class has fewer than 8 observations; dangerous ground
+#> Number of features selected by EL for CD8T: 1000
+#> Running lasso for feature selection of CD4T.
+#> Warning in lognet(xd, is.sparse, ix, jx, y, weights, offset, alpha, nobs, : one
+#> multinomial or binomial class has fewer than 8 observations; dangerous ground
+#> Number of features selected by lasso for CD4T: 3
+#> Running elastic net (EL) for feature selection of CD4T.
+#> Warning in lognet(xd, is.sparse, ix, jx, y, weights, offset, alpha, nobs, : one
+#> multinomial or binomial class has fewer than 8 observations; dangerous ground
+#> Number of features selected by EL for CD4T: 1000
+#> Running lasso for feature selection of NK.
+#> Warning in lognet(xd, is.sparse, ix, jx, y, weights, offset, alpha, nobs, : one
+#> multinomial or binomial class has fewer than 8 observations; dangerous ground
+#> Number of features selected by lasso for NK: 3
+#> Running elastic net (EL) for feature selection of NK.
+#> Warning in lognet(xd, is.sparse, ix, jx, y, weights, offset, alpha, nobs, : one
+#> multinomial or binomial class has fewer than 8 observations; dangerous ground
+#> Number of features selected by EL for NK: 1000
+#> Running lasso for feature selection of Bcell.
+#> Warning in lognet(xd, is.sparse, ix, jx, y, weights, offset, alpha, nobs, : one
+#> multinomial or binomial class has fewer than 8 observations; dangerous ground
+#> Number of features selected by lasso for Bcell: 2
+#> Running elastic net (EL) for feature selection of Bcell.
+#> Warning in lognet(xd, is.sparse, ix, jx, y, weights, offset, alpha, nobs, : one
+#> multinomial or binomial class has fewer than 8 observations; dangerous ground
+#> Number of features selected by EL for Bcell: 1000
+#> Running lasso for feature selection of Mono.
+#> Warning in lognet(xd, is.sparse, ix, jx, y, weights, offset, alpha, nobs, : one
+#> multinomial or binomial class has fewer than 8 observations; dangerous ground
+#> Number of features selected by lasso for Mono: 2
+#> Running elastic net (EL) for feature selection of Mono.
+#> Warning in lognet(xd, is.sparse, ix, jx, y, weights, offset, alpha, nobs, : one
+#> multinomial or binomial class has fewer than 8 observations; dangerous ground
+#> Number of features selected by EL for Mono: 1000
+#> Running lasso for feature selection of Gran.
+#> Warning in lognet(xd, is.sparse, ix, jx, y, weights, offset, alpha, nobs, : one
+#> multinomial or binomial class has fewer than 8 observations; dangerous ground
+#> Number of features selected by lasso for Gran: 4
+#> Running elastic net (EL) for feature selection of Gran.
+#> Warning in lognet(xd, is.sparse, ix, jx, y, weights, offset, alpha, nobs, : one
+#> multinomial or binomial class has fewer than 8 observations; dangerous ground
+#> Number of features selected by EL for Gran: 1000
 ```
 
 ### Assess clustering stability
@@ -109,15 +170,18 @@ be applied to assess whether the picked probes can be used to generate
 the correct cluster (cell type labeling) in reference data
 
 ``` r
-clustout <- pvclust(comb_dat$ref.n[rownames(probes$coefs$probeCoefs$lasso), ], parallel = cl)
-pvClust <- hc2split(clustout$hclust)$member
-ctClust <- sapply(ref$cellTypes, function(x){ # can be replaced with user cellTypes arguments
-    return(which(comb_dat$refMeta$cellType == x))
-}) 
-identClust <- lapply(ctClust, function(ct){
-    y <- sapply(pvClust, function(x){identical(x, ct)}) %>% which(.)
-    return(clustout$edges[y, ])
-})
+clustAU <- identClust(dataNormed = comb_dat,
+                      probes = probes,
+                      parallel = TRUE)
+#> Creating a temporary cluster...done:
+#> socket cluster with 15 nodes on host 'localhost'
+#> Multiscale bootstrap... Done.
+#> Creating a temporary cluster...done:
+#> socket cluster with 15 nodes on host 'localhost'
+#> Multiscale bootstrap... Done.
+#> Creating a temporary cluster...done:
+#> socket cluster with 15 nodes on host 'localhost'
+#> Multiscale bootstrap... Done.
 ```
 
 ### Estimate cell type proportion
@@ -134,4 +198,8 @@ out <- predictCT(dataNormed = comb_dat,
                  removenRBC = F, # remove nRBC?
                  verbose = T, 
                  cetygo = T) # CETYGO to assess reference appropriateness (RMSE evaluation)
+#> Estimating Composition Based on Selected Projection Method.
+#> No constraint
+#> No constraint
+#> No constraint
 ```

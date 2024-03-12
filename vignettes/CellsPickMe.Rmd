@@ -117,7 +117,7 @@ The **CellsPickMe** package supports feature selection with either the tradition
 ```{r pickProbes}
 # Pick probes with T tests
 probes <- pickProbes(dataNormed = comb_dat, 
-                     probeList = "Ttest", #c("Ttest", "Caret", "IDOL", "DHS")
+                     probeList = "Ttest", #c("Ttest", "Caret_CV", "Caret_LOOCV", "IDOL", "DHS")
                      probeSelect = "both", #c("both", "any", "pval")
                      nProbes = 100, # number of probes to pick for each cell type
                      p.val = 0.05,  # max pval

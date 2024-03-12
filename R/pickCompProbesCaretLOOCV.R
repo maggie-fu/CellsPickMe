@@ -11,6 +11,8 @@
 #' @param seed An integer specifying the seed for reproducibility
 #' @param plot A Boolean specifying whether to plot a heatmap showing the clustering performance using the probes selected
 #' @param verbose A Boolean specifying whether the function should be verbose or not
+#'
+#' @export
 
 pickCompProbesCaretLOOCV <- function(betas, meta, ct,
                                      caretMods = c("lasso", "EL", "BLR", "CART", "RF", "GBM", "PLDA", "GAnRF", "GAnNB", "GAnSVM", "GAnNN"),

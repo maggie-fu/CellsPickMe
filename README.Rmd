@@ -26,7 +26,7 @@ The main purpose of the RAMEN package is to conduct a methylome-wide analysis to
 
 You can install the development version of CellsPickMe from [GitHub](https://github.com/) with:
 
-```{r install, eval = FALSE}
+```{r install, message = FALSE, warning = FALSE}
 # install.packages("devtools")
 library(devtools)
 devtools::install_github("maggie-fu/CellsPickMe")

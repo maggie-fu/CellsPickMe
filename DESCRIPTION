@@ -19,6 +19,7 @@ Imports:
     methylumi,
     minfi,
     pheatmap,
+    pvclust,
     rlang,
     stats
 Suggests: 

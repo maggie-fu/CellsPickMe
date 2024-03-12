@@ -3,6 +3,7 @@
 export("%>%")
 export(combData)
 export(getRef)
+export(identClust)
 export(pickProbes)
 export(predictCT)
 import(caret)

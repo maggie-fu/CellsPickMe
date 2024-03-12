@@ -19,7 +19,7 @@
 #' # Combine sample and reference data sets together, followed by normalization (if selected)
 #' comb_dat <- combData(dataset = test_dat, reference = ref_dat$reference, class = "rgset", normType = "None", cellTypes = ref_dat$cellTypes)
 #' # Pick probes with repeated cross validation with lasso and elastic net
-#' probes <- probes <- pickProbes(dataNormed = comb_dat, probeList = "Ttest", probeSelect = "both", nProbes = 100, min.delta.beta = 0.05)
+#' probes <- pickProbes(dataNormed = comb_dat, probeList = "Ttest", probeSelect = "both", nProbes = 100, min.delta.beta = 0.05)
 #' # Estimate cell type proportion
 #' out <- predictCT(dataNormed = comb_dat, probes = probes, method = "CP", cetygo = TRUE)
 

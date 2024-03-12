@@ -188,8 +188,7 @@ getErrorPerSample <- function(applyIndex, predictedIN,
 
 #############################################################################################################
 
-hc2split <- function(x)
-{
+hc2split <- function(x){
     A <- x$merge # (n-1,n) matrix
     n <- nrow(A) + 1
     B <- list()

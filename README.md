@@ -50,8 +50,6 @@ library(CellsPickMe)
 
 # Request the IDOL reference (2016) with no normalization
 ref_dat <- getRef(ref = "IDOL", normType = "None")
-#> see ?FlowSorted.Blood.EPIC and browseVignettes('FlowSorted.Blood.EPIC') for documentation
-#> loading from cache
 ```
 
 ### Normalize sample and reference datasets together
@@ -70,8 +68,6 @@ comb_dat <- combData(dataset = test_dat,
                      normType = "Noob", 
                      cellTypes = ref_dat$cellTypes)
 #> Combining Data with Flow Sorted Data and Normalizing.
-#> Loading required package: IlluminaHumanMethylationEPICmanifest
-#> Loading required package: IlluminaHumanMethylationEPICanno.ilm10b4.hg19
 ```
 
 ### Pick features that best distinguish cell type
@@ -105,62 +101,12 @@ registerDoParallel(cl)
 
 # Pick probes with repeated cross validation with lasso and elastic net
 probes <- pickProbes(dataNormed = comb_dat, 
-                     probeList = "Caret_CV", #c("Ttest", "Caret_CV", "Caret_LOOCV", "IDOL", "DHS")
+                     probeList = "Caret_CV", #c("Caret_CV", "Caret_LOOCV")
                      caretMods = c("lasso", "EL"),  #c("lasso", "EL", "BLR", "CART", "RF", "GBM", "PLDA", "GAnRF", "GAnNB", "GAnSVM", "GAnNN")
                      filterK = 1000, # number of probes to put into the predictor for each cell type
                      seed = 1, 
                      plotRef = F, # plot heatmap?
-                     verbose = T)
-#> Estimating Weights for Cell Type Prediction Based on Selected Probeset.
-#> Loading required namespace: glmnet
-#> Running lasso for feature selection of CD8T.
-#> Warning in lognet(xd, is.sparse, ix, jx, y, weights, offset, alpha, nobs, : one
-#> multinomial or binomial class has fewer than 8 observations; dangerous ground
-#> Number of features selected by lasso for CD8T: 2
-#> Running elastic net (EL) for feature selection of CD8T.
-#> Warning in lognet(xd, is.sparse, ix, jx, y, weights, offset, alpha, nobs, : one
-#> multinomial or binomial class has fewer than 8 observations; dangerous ground
-#> Number of features selected by EL for CD8T: 1000
-#> Running lasso for feature selection of CD4T.
-#> Warning in lognet(xd, is.sparse, ix, jx, y, weights, offset, alpha, nobs, : one
-#> multinomial or binomial class has fewer than 8 observations; dangerous ground
-#> Number of features selected by lasso for CD4T: 3
-#> Running elastic net (EL) for feature selection of CD4T.
-#> Warning in lognet(xd, is.sparse, ix, jx, y, weights, offset, alpha, nobs, : one
-#> multinomial or binomial class has fewer than 8 observations; dangerous ground
-#> Number of features selected by EL for CD4T: 1000
-#> Running lasso for feature selection of NK.
-#> Warning in lognet(xd, is.sparse, ix, jx, y, weights, offset, alpha, nobs, : one
-#> multinomial or binomial class has fewer than 8 observations; dangerous ground
-#> Number of features selected by lasso for NK: 3
-#> Running elastic net (EL) for feature selection of NK.
-#> Warning in lognet(xd, is.sparse, ix, jx, y, weights, offset, alpha, nobs, : one
-#> multinomial or binomial class has fewer than 8 observations; dangerous ground
-#> Number of features selected by EL for NK: 1000
-#> Running lasso for feature selection of Bcell.
-#> Warning in lognet(xd, is.sparse, ix, jx, y, weights, offset, alpha, nobs, : one
-#> multinomial or binomial class has fewer than 8 observations; dangerous ground
-#> Number of features selected by lasso for Bcell: 2
-#> Running elastic net (EL) for feature selection of Bcell.
-#> Warning in lognet(xd, is.sparse, ix, jx, y, weights, offset, alpha, nobs, : one
-#> multinomial or binomial class has fewer than 8 observations; dangerous ground
-#> Number of features selected by EL for Bcell: 1000
-#> Running lasso for feature selection of Mono.
-#> Warning in lognet(xd, is.sparse, ix, jx, y, weights, offset, alpha, nobs, : one
-#> multinomial or binomial class has fewer than 8 observations; dangerous ground
-#> Number of features selected by lasso for Mono: 2
-#> Running elastic net (EL) for feature selection of Mono.
-#> Warning in lognet(xd, is.sparse, ix, jx, y, weights, offset, alpha, nobs, : one
-#> multinomial or binomial class has fewer than 8 observations; dangerous ground
-#> Number of features selected by EL for Mono: 1000
-#> Running lasso for feature selection of Gran.
-#> Warning in lognet(xd, is.sparse, ix, jx, y, weights, offset, alpha, nobs, : one
-#> multinomial or binomial class has fewer than 8 observations; dangerous ground
-#> Number of features selected by lasso for Gran: 4
-#> Running elastic net (EL) for feature selection of Gran.
-#> Warning in lognet(xd, is.sparse, ix, jx, y, weights, offset, alpha, nobs, : one
-#> multinomial or binomial class has fewer than 8 observations; dangerous ground
-#> Number of features selected by EL for Gran: 1000
+                     verbose = F)
 ```
 
 ### Assess clustering stability
@@ -196,10 +142,6 @@ out <- predictCT(dataNormed = comb_dat,
                  probes = probes, 
                  method = "CP",  #c("CP", "RPC", "SVR")
                  removenRBC = F, # remove nRBC?
-                 verbose = T, 
+                 verbose = F, 
                  cetygo = T) # CETYGO to assess reference appropriateness (RMSE evaluation)
-#> Estimating Composition Based on Selected Projection Method.
-#> No constraint
-#> No constraint
-#> No constraint
 ```

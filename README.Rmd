@@ -20,8 +20,6 @@ knitr::opts_chunk$set(
 
 **CellsPickMe** is a comprehensive R package for cell type proportion prediction based on DNA methylation data. As cell identity is crucially linked to cell function and DNA methylation profile, estimation of cell type proportion is instrumental to understanding major factors driving DNA methylation variability. Accounting for inter-individual cellular heterogeneity is also vital in epigenome-wide association studies (EWAS) to accurately evaluate the signals associated with the variables of interest. 
 
-The main purpose of the RAMEN package is to conduct a methylome-wide analysis to identify which model (G, E, G+E or GxE) better explains the variability across the genome. In this vignette, we will illustrate how to use the package. 
-
 ## Installation
 
 You can install the development version of CellsPickMe from [GitHub](https://github.com/) with:

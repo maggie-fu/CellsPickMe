@@ -129,7 +129,7 @@ pickCompProbesCaretLOOCV <- function(betas, meta, ct,
             ELout <- caret::train(x = df,
                                   y = ctIndex,
                                   method = "glmnet",
-                                  tunelength = 10,
+                                  tuneLength = 10,
                                   trControl = control10)
             if(verbose) cat(paste0("Number of features selected by EL for ", ctType, ": ", length(caret::predictors(ELout)), "\n"))
             if (plot & length(caret::predictors(ELout)) > 1){

@@ -135,12 +135,12 @@ pickCompProbesCaret <- function(betas, meta, ct,
         if ("EL" %in% caretMods){
             requireNamespace("glmnet")
             if(verbose) cat(paste0("Running elastic net (EL) for feature selection of ", ctType, ".\n"))
-            ELtune <- expand.grid(alpha = seq(0, 1, length = 10),
-                                  lambda = seq(0.1, 1, length = 10))
+            # ELtune <- expand.grid(alpha = seq(0, 1, length = 10),
+            #                       lambda = seq(0.1, 1, length = 10))
             ELout <- caret::train(x = df,
                                   y = ctIndex,
                                   method = "glmnet",
-                                  tuneGrid = ELtune,
+                                  tuneLength = 10,
                                   trControl = control10)
             if(verbose) cat(paste0("Number of features selected by EL for ", ctType, ": ", length(caret::predictors(ELout)), "\n"))
             if (plot & length(caret::predictors(ELout)) > 1){

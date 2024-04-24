@@ -90,7 +90,9 @@ pickCompProbesCaretLOOCV <- function(betas, meta, ct,
         ctIndex[x] <- "Y"
         ctIndex <- as.factor(ctIndex)
         tout <- genefilter::rowttests(df, ctIndex)
-        tout.top <- rownames(tout)[order(tout$p.value, decreasing = F)][1:filterK] # pick filterK number of probes as the first pass
+        tout.Up <- tout[order(tout$dm, decreasing = TRUE), ]
+        tout.Down <- tout[order(tout$dm, decreasing = FALSE), ]
+        tout.top <- c(rownames(tout.Up)[1:(round(filterK/2))], rownames(tout.Down)[1:(round(filterK/2))]) # pick filterK number of probes as the first pass
         df <- df[tout.top, ] %>% t()
 
         out <- vector(mode = 'list', length = length(caretMods) + 1)

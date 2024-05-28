@@ -36,12 +36,11 @@ combData <- function(dataset, reference, class = c("rgset", "betas"),
         processMethod <- "preprocessQuantile"
         if (class == "betas") stop("A RGChannelSet is required for this quantile normalization method. If you only have betas, set normalization method to Quantile.b instead")
     } else if (normType == "Quantile.b") {
-        processMethod <- "normalizeQuantiles"
         if (class == "rgset") stop("Quantile.b is exclusively for beta matrix input. Use Quantile instead if you have an RGChannelSet")
     }
 
     sampCT <- rep("WBC", ncol(dataset))
-    if (normType != "None") {
+    if (normType %in% c("Funnorm", "Noob", "Quantile")) {
         processMethod <- get(processMethod)
     }
 
@@ -63,7 +62,7 @@ combData <- function(dataset, reference, class = c("rgset", "betas"),
         commonprobe <- intersect(as.character(rownames(dataset)), as.character(rownames(ref)))
         if (normType == "Quantile.b") {
             comb <- cbind(dataset[commonprobe, ], ref[commonprobe, ])
-            comb.n <- processMethod(comb)
+            comb.n <- limma::preprocessQuantile(comb)
             samp.n <- comb.n[, colnames(dataset)]
             ref.n <- comb.n[, colnames(ref)]
         } else if (normType == "None") {

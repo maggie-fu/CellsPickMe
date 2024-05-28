@@ -133,6 +133,8 @@ RPC <- function(samp.n, coef, conditions = 50) {
         out <- summary(fit)$coef[, 1]
         out[out < 0] <- 0
         out <- out/sum(out)
+        length(out)
+        # return(out)
     }) %>% t()
     return(ctEst)
 }
@@ -222,3 +224,4 @@ hc2split <- function(x){
 
     return(split)
 }
+

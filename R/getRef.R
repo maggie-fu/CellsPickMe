@@ -46,6 +46,7 @@ getRef <- function(ref = c("Reinius", "IDOL", "IDOL_extended", "Mixed",
     ### Extended (adult blood) reference
     if(ref == "IDOL_extended"){
         reference <- hub[["EH5425"]]
+        n
         cellTypes <- c("Bas", "Bmem", "Bnv", "CD4mem", "CD4nv",
                        "CD8mem", "CD8nv", "Eos", "Mono", "Neu", "NK", "Treg")
     }

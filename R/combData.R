@@ -62,7 +62,7 @@ combData <- function(dataset, reference, class = c("rgset", "betas"),
         commonprobe <- intersect(as.character(rownames(dataset)), as.character(rownames(ref)))
         if (normType == "Quantile.b") {
             comb <- cbind(dataset[commonprobe, ], ref[commonprobe, ])
-            comb.n <- limma::preprocessQuantile(comb)
+            comb.n <- limma::normalizeQuantiles(comb)
             samp.n <- comb.n[, colnames(dataset)]
             ref.n <- comb.n[, colnames(ref)]
         } else if (normType == "None") {

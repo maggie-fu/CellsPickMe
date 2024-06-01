@@ -73,12 +73,12 @@ pickCompProbesCaretLOOCV <- function(betas, meta, ct,
 
     ## Setting plotting colors
     if (plot){
-        pltct <- c(Bcell = "#980043FF", Bmem = "#CE1256FF", Bnv = "#DF65B0FF",
-                   CD4T = "#662506FF", CD4mem = "#993404FF", CD4nv = "#FE9929FF",
-                   CD8T = "#B30000FF", CD8mem = "#CB181DFF", CD8nv = "#FB6A4AFF",
-                   Treg = "#FF847CFF", Mono = "#2F8AC4", NK = "#764E9F",
-                   Gran = "#99C945", Neu = "#52BCA3", Eos = "#24796C",
-                   Bas = "#A8DDB5FF", nRBC = "#67000DFF", PBMC = "#A5AA99", WBC = "#252525FF")
+        pltct <- c(Bcell_cord = "#9C9EDEFF", Bnv = "#7375B5FF", Bmem = "#4A5584FF",
+                   CD4T_cord = "#CEDB9CFF", CD4nv = "#B5CF6BFF", CD4mem = "#637939FF", Treg = "#8CA252FF",
+                   CD8T_cord = "#E7CB94FF", CD8nv = "#E7BA52FF", CD8mem = "#8C6D31FF",
+                   NK_cord = "#7BBCB0FF", NK = "#3A7C89FF", Mono_cord = "#F3CBD3FF", Mono = "#707070",
+                   Gran_cord = "#D39C83FF", Neu = "#A65461FF", Bas = "#7B4173FF", Eos = "#A55194FF",
+                   nRBC = "#843C39FF", PBMC = "#A5AA99", WBC = "#252525FF")
         pltct <- pltct[names(pltct) %in% ct]
         anncolors <- list(cellType = pltct)
     }

@@ -38,6 +38,7 @@ Suggests:
     quadprog,
     rpart,
     rqPen,
+    sparsediscrim,
     xgboost
 Config/testthat/edition: 3
 Depends: 

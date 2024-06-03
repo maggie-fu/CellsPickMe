@@ -41,9 +41,9 @@ pickCompProbesCaret <- function(betas, meta, ct,
     seeds10 <- vector(mode = "list", length = 26) # 5 repeats of 5-fold CV [cannot do 10 - not enough samples] (5*5+1) - change if the sampling method is altered in trainControl below
     for(i in 1:25) seeds10[[i]] <- sample.int(1000, 10)
     seeds10[[26]] <- sample.int(1000, 1)
-    seeds400 <- vector(mode = "list", length = 26) # 5 repeats of 5-fold CV [cannot do 10 - not enough samples] (5*5+1) - change if the sampling method is altered in trainControl below
-    for(i in 1:25) seeds400[[i]] <- sample.int(1000, 400)
-    seeds400[[26]] <- sample.int(1000, 1)
+    seeds400 <- vector(mode = "list", length = 6) # 1 repeats of 5-fold CV [cannot do 10 - not enough samples] (1*5+1) - change if the sampling method is altered in trainControl below
+    for(i in 1:5) seeds400[[i]] <- sample.int(1000, 400)
+    seeds400[[6]] <- sample.int(1000, 1)
 
     seedsGA <- sample.int(1000, 26)
     seedsGA2 <- vector(mode = "list", length = 26) # 5 repeats of 5-fold CV [cannot do 10 - not enough samples] (5*5+1) - change if the sampling method is altered in trainControl below
@@ -62,9 +62,8 @@ pickCompProbesCaret <- function(betas, meta, ct,
                                      # sampling = "up",
                                      verboseIter = F,
                                      seeds = seeds10)
-    control9 <- caret::trainControl(method = "repeatedcv",
+    control9 <- caret::trainControl(method = "cv",
                                     number = 5,
-                                    repeats = 5,
                                     # sampling = "up",
                                     verboseIter = F,
                                     seeds = seeds9)
@@ -255,12 +254,12 @@ pickCompProbesCaret <- function(betas, meta, ct,
         # LDA is a technique for dimensionality reduction, meaning that it reduces the number of input features to a smaller set of new features that are most discriminative for the classification task.
         # Specifically, LDA aims to find a linear combination of the input features that maximizes the separation between the classes, while minimizing the variance within each class.
         if ("PLDA" %in% caretMods){
-            requireNamespace("rqPen")
+            requireNamespace("sparsediscrim")
             if(verbose) cat(paste0("Running Penalized Linear Discriminant Analysis (PLDA) for feature selection of ", ctType, ".\n"))
             set.seed(seed)
             PLDAout <- train(x = df,
                             y = ctIndex,
-                            method = "PenalizedLDA",
+                            method = "rlda",
                             tuneLength = 5,
                             trControl = control5)
             if(verbose) cat(paste0("Number of features selected by PLDA for ", ctType, ": ", length(caret::predictors(PLDAout)), "\n"))
@@ -289,7 +288,7 @@ pickCompProbesCaret <- function(betas, meta, ct,
             GAnNNout <- caret::gafs(x = df,
                                     y = ctIndex,
                                     iters = 1,
-                                    gafsControl = gafsControl(method = "LOOCV",
+                                    gafsControl = gafsControl(method = "cv",
                                                               functions = caretGA,
                                                               seeds = seedsGA,
                                                               verbose = TRUE),
@@ -322,7 +321,7 @@ pickCompProbesCaret <- function(betas, meta, ct,
             GAnNBout <- caret::gafs(x = df,
                                     y = ctIndex,
                                     iters = 1,
-                                    gafsControl = gafsControl(method = "LOOCV",
+                                    gafsControl = gafsControl(method = "cv",
                                                               functions = caretGA,
                                                               seeds = seedsGA),
                                     method = "nb",
@@ -354,7 +353,7 @@ pickCompProbesCaret <- function(betas, meta, ct,
             GAnSVMout <- caret::gafs(x = df,
                                      y = ctIndex,
                                      iters = 1,
-                                     gafsControl = gafsControl(method = "LOOCV",
+                                     gafsControl = gafsControl(method = "cv",
                                                                functions = caretGA,
                                                                seeds = seedsGA),
                                      method = "svmLinear",
@@ -379,7 +378,7 @@ pickCompProbesCaret <- function(betas, meta, ct,
             GAnRFout <- caret::gafs(x = df,
                                     y = ctIndex,
                                     iters = 1,
-                                    gafsControl = gafsControl(method = "LOOCV",
+                                    gafsControl = gafsControl(method = "cv",
                                                               functions = caretGA,
                                                               seeds = seedsGA),
                                     method = "rf",

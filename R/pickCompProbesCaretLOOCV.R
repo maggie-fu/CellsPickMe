@@ -246,12 +246,12 @@ pickCompProbesCaretLOOCV <- function(betas, meta, ct,
         # LDA is a technique for dimensionality reduction, meaning that it reduces the number of input features to a smaller set of new features that are most discriminative for the classification task.
         # Specifically, LDA aims to find a linear combination of the input features that maximizes the separation between the classes, while minimizing the variance within each class.
         if ("PLDA" %in% caretMods){
-            requireNamespace("rqPen")
+            requireNamespace("sparsediscrim")
             if(verbose) cat(paste0("Running Penalized Linear Discriminant Analysis (PLDA) for feature selection of ", ctType, ".\n"))
             set.seed(seed)
             PLDAout <- train(x = df,
                              y = ctIndex,
-                             method = "PenalizedLDA",
+                             method = "rlda",
                              tuneLength = 5,
                              trControl = control5)
             if(verbose) cat(paste0("Number of features selected by PLDA for ", ctType, ": ", length(caret::predictors(PLDAout)), "\n"))

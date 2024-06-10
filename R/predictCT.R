@@ -30,36 +30,40 @@ predictCT <- function(dataNormed, probes, method, conditions = NULL, removenRBC 
 
     if (probes$probeList %in% c("Caret_LOOCV", "Caret_CV")){
         out <- lapply(probes$coefs$probeCoefs, function(coefs){
-            mat <- dataNormed$samp.n[rownames(coefs), ]
-            mat <- as.matrix(mat[stats::complete.cases(mat), ])
-            coefs <- as.matrix(coefs)
-            if(removenRBC){
-                coefs <- coefs[, colnames(coefs) != "nRBC"] # For peripheral blood, remove nRBC in prediction
-            }
-            if (ncol(coefs) > 0) {
-                if (is.null(conditions)) counts <- projectionMethod(samp.n = mat, coef = coefs) %>%
-                        as.data.frame() # Using the weights generated in the last step to stimate the proportion of each cell type
-                else counts <- projectionMethod(samp.n = mat, coef = coefs, conditions = conditions) %>%
-                        as.data.frame()
-            }
-            # counts[counts < 0] <- 0
-            out <- counts
+            if(nrow(coefs) <= ncol(coefs)) {
+                message("There are fewer features than the number of cell types you're trying to predict! skipping this prediction")
+            } else {
+                mat <- dataNormed$samp.n[rownames(coefs), ]
+                mat <- as.matrix(mat[stats::complete.cases(mat), ])
+                coefs <- as.matrix(coefs)
+                if(removenRBC){
+                    coefs <- coefs[, colnames(coefs) != "nRBC"] # For peripheral blood, remove nRBC in prediction
+                }
+                if (ncol(coefs) > 0) {
+                    if (is.null(conditions)) counts <- projectionMethod(samp.n = mat, coef = coefs) %>%
+                            as.data.frame() # Using the weights generated in the last step to stimate the proportion of each cell type
+                    else counts <- projectionMethod(samp.n = mat, coef = coefs, conditions = conditions) %>%
+                            as.data.frame()
+                }
+                # counts[counts < 0] <- 0
+                out <- counts
 
-            if(cetygo){
-                YIN <- dataNormed$samp.n[rownames(coefs), ]
-                CETYGO <- sapply(seq_len(nrow(counts)), function(x) {
-                    getErrorPerSample(applyIndex = x,
-                                      predictedIN = counts,
-                                      coefDataIN = coefs,
-                                      betasBulkIN = YIN)
-                })
-                nMissingAll <- nrow(coefs) - nrow(YIN)
-                nCGmissing <- apply(YIN, 2, function(x) {
-                    sum(is.na(x)) + nMissingAll
-                })
-                out <- cbind(counts, CETYGO, nCGmissing)
+                if(cetygo){
+                    YIN <- dataNormed$samp.n[rownames(coefs), ]
+                    CETYGO <- sapply(seq_len(nrow(counts)), function(x) {
+                        getErrorPerSample(applyIndex = x,
+                                          predictedIN = counts,
+                                          coefDataIN = coefs,
+                                          betasBulkIN = YIN)
+                    })
+                    nMissingAll <- nrow(coefs) - nrow(YIN)
+                    nCGmissing <- apply(YIN, 2, function(x) {
+                        sum(is.na(x)) + nMissingAll
+                    })
+                    out <- cbind(counts, CETYGO, nCGmissing)
+                }
+                return(out)
             }
-            return(out)
         })
     } else {
         mat <- dataNormed$samp.n[rownames(probes$coefs), ]

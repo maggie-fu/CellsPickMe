@@ -14,7 +14,7 @@
 #'
 #' @export
 
-pickCompProbesCaretLOOCV <- function(betas, meta, ct,
+pickCompProbesCaretLOOCV <- function(betas, meta, ct, ps = c("both", "any", "filter"), min.delta.beta = 0, p.val = 1e-8,
                                      caretMods = c("lasso", "EL", "BLR", "CART", "RF", "GBM", "PLDA", "GAnRF", "GAnNB", "GAnSVM", "GAnNN"),
                                      filterK = 10000, seed = 1234, plot = TRUE, verbose = TRUE) {
     df <- as.matrix(betas)
@@ -90,9 +90,19 @@ pickCompProbesCaretLOOCV <- function(betas, meta, ct,
         ctIndex[x] <- "Y"
         ctIndex <- as.factor(ctIndex)
         tout <- genefilter::rowttests(df, ctIndex)
-        tout.Up <- tout[order(tout$dm, decreasing = TRUE), ]
-        tout.Down <- tout[order(tout$dm, decreasing = FALSE), ]
-        tout.top <- c(rownames(tout.Up)[1:(round(filterK/2))], rownames(tout.Down)[1:(round(filterK/2))]) # pick filterK number of probes as the first pass
+        ## Select N (default = 100) probes for each given cell type that can best distinguish cell types
+        if (ps == "both"){
+            tout.Up <- tout[order(tout$dm, decreasing = TRUE), ]
+            tout.Down <- tout[order(tout$dm, decreasing = FALSE), ]
+            tout.top <- c(rownames(tout.Up)[1:(round(filterK/2))], rownames(tout.Down)[1:(round(filterK/2))]) # pick filterK number of probes as the first pass
+        } else if (ps == "any"){
+            tout <- tout[order(abs(tout$dm), decreasing = TRUE), ]
+            tout.top <- rownames(tout.Up)[1:filterK]
+        } else if (ps == "filter"){
+            tout <- tout[tout$p.value < p.val & abs(tout$dm) > min.delta.beta, ]
+            tout <- tout[order(abs(tout$dm), decreasing = TRUE), ]
+            tout.top <- rownames(tout.Up)[1:filterK]
+        }
         df <- df[tout.top, ] %>% t()
 
         out <- vector(mode = 'list', length = length(caretMods) + 1)

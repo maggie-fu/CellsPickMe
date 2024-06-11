@@ -36,18 +36,12 @@ pickCompProbes2 <- function(betas, meta, nP, ct, ps = "any", trainingProbes = NU
         ## Select N (default = 100) probes for each given cell type that can best distinguish cell types
         if (ps == "both"){
             probeList <- lapply(tstatList, function(ct) {
-                probes <- ct[ct$p.value < p.val, ]
+                probes <- ct[ct$p.value < p.val & abs(ct$dm) > min.delta.beta, ]
                 pUp <- probes[order(probes$dm, decreasing = TRUE), ]
                 pDown <- probes[order(probes$dm, decreasing = FALSE), ]
                 return(c(rownames(pUp)[1:(nP/2)], rownames(pDown)[1:(nP/2)]))
             })
         } else if (ps == "any"){
-            probeList <- lapply(tstatList, function(ct) {
-                probes <- ct[ct$p.value < p.val, ]
-                probes <- probes[order(abs(probes$dm), decreasing = TRUE), ]
-                return(rownames(probes)[1:nP])
-            })
-        } else if (ps == "filter"){
             probeList <- lapply(tstatList, function(ct) {
                 probes <- ct[ct$p.value < p.val & abs(ct$dm) > min.delta.beta, ]
                 probes <- probes[order(abs(probes$dm), decreasing = TRUE), ]

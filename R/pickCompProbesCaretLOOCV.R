@@ -6,6 +6,9 @@
 #' @param betas A beta matrix of reference DNA methylation data that will be used to select for features for cell type prediction
 #' @param meta A data frame of phenotype data, specifying which of the reference samples are of what cell types
 #' @param ct A vector of characters specifying the cell types to deconvolute
+#' @param ps A character of either "any" or "both" to specify first line filter for T test prior to passing to machine learning algorithms
+#' @param min.delta.beta A numeric variable defining T test minimum delta beta for first line filter prior to passing to machine learning algorithms
+#' @param p.val A numeric variable defining maximum T test p.value for first line filter prior to passing to machine learning algorithms
 #' @param caretMods A vector of characters, selecting the models to use to pick the cell type prediction features, options include "lasso", "EL", "BLR", "CART", "RF", "GBM", "PLDA", "GAnRF", "GAnNB", "GAnSVM", and "GAnNN"
 #' @param filterK An integer, representing the number probes to input to the machine learning algorithms with top T test probes
 #' @param seed An integer specifying the seed for reproducibility
@@ -14,9 +17,9 @@
 #'
 #' @export
 
-pickCompProbesCaretLOOCV <- function(betas, meta, ct, ps = c("both", "any", "filter"), min.delta.beta = 0, p.val = 1e-8,
+pickCompProbesCaretLOOCV <- function(betas, meta, ct, ps = c("any", "both"), min.delta.beta = 0, p.val = 1e-8,
                                      caretMods = c("lasso", "EL", "BLR", "CART", "RF", "GBM", "PLDA", "GAnRF", "GAnNB", "GAnSVM", "GAnNN"),
-                                     filterK = 10000, seed = 1234, plot = TRUE, verbose = TRUE) {
+                                     filterK = 1000, seed = 1234, plot = TRUE, verbose = TRUE) {
     df <- as.matrix(betas)
     pd <- as.data.frame(meta)
 
@@ -92,13 +95,11 @@ pickCompProbesCaretLOOCV <- function(betas, meta, ct, ps = c("both", "any", "fil
         tout <- genefilter::rowttests(df, ctIndex)
         ## Select N (default = 100) probes for each given cell type that can best distinguish cell types
         if (ps == "both"){
+            tout <- tout[tout$p.value < p.val & abs(tout$dm) > min.delta.beta, ]
             tout.Up <- tout[order(tout$dm, decreasing = TRUE), ]
             tout.Down <- tout[order(tout$dm, decreasing = FALSE), ]
             tout.top <- c(rownames(tout.Up)[1:(round(filterK/2))], rownames(tout.Down)[1:(round(filterK/2))]) # pick filterK number of probes as the first pass
         } else if (ps == "any"){
-            tout <- tout[order(abs(tout$dm), decreasing = TRUE), ]
-            tout.top <- rownames(tout.Up)[1:filterK]
-        } else if (ps == "filter"){
             tout <- tout[tout$p.value < p.val & abs(tout$dm) > min.delta.beta, ]
             tout <- tout[order(abs(tout$dm), decreasing = TRUE), ]
             tout.top <- rownames(tout.Up)[1:filterK]

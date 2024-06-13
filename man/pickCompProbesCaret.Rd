@@ -8,9 +8,11 @@ pickCompProbesCaret(
   betas,
   meta,
   ct,
-  caretMods = c("lasso", "EL", "BLR", "CART", "RF", "GBM", "PLDA", "GAnRF", "GAnNB",
-    "GAnSVM", "GAnNN"),
-  filterK = 10000,
+  ps,
+  min.delta.beta,
+  p.val,
+  caretMods,
+  filterK = 1000,
   seed = 1234,
   plot = TRUE,
   verbose = TRUE
@@ -22,6 +24,12 @@ pickCompProbesCaret(
 \item{meta}{A data frame of phenotype data, specifying which of the reference samples are of what cell types}
 
 \item{ct}{A vector of characters specifying the cell types to deconvolute}
+
+\item{ps}{A character of either "any" or "both" to specify first line filter for T test prior to passing to machine learning algorithms}
+
+\item{min.delta.beta}{A numeric variable defining T test minimum delta beta for first line filter prior to passing to machine learning algorithms}
+
+\item{p.val}{A numeric variable defining maximum T test p.value for first line filter prior to passing to machine learning algorithms}
 
 \item{caretMods}{A vector of characters, selecting the models to use to pick the cell type prediction features, options include "lasso", "EL", "BLR", "CART", "RF", "GBM", "PLDA", "GAnRF", "GAnNB", "GAnSVM", and "GAnNN"}
 

@@ -28,7 +28,7 @@
 #' probes <- pickProbes(dataNormed = comb_dat, probeList = "Caret_CV", caretMods = c("lasso", "EL"), filterK = 1000, seed = 1)
 
 
-pickProbes <- function(dataNormed, probeList = c("Ttest", "Caret", "IDOL", "DHS"), probeSelect, nProbes,
+pickProbes <- function(dataNormed, probeList = c("Ttest", "Caret", "IDOL", "DHS"), probeSelect = c("any", "both"), nProbes,
                        caretMods = c("lasso", "EL", "BLR", "CART", "RF", "GBM", "GAnLDA", "GAnRF", "GAnNB", "GAnSVM", "GAnNN"),
                        seed = 1, p.val = 0.05, min.delta.beta = 0, filterK = 1000, plotRef = TRUE, verbose = TRUE) {
     ### Pick probes and estimate weights

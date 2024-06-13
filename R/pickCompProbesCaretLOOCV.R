@@ -76,9 +76,9 @@ pickCompProbesCaretLOOCV <- function(betas, meta, ct, ps = c("any", "both"), min
 
     ## Setting plotting colors
     if (plot){
-        pltct <- c(Bcell_cord = "#9C9EDEFF", Bnv = "#7375B5FF", Bmem = "#4A5584FF",
-                   CD4T_cord = "#CEDB9CFF", CD4nv = "#B5CF6BFF", CD4mem = "#637939FF", Treg = "#8CA252FF",
-                   CD8T_cord = "#E7CB94FF", CD8nv = "#E7BA52FF", CD8mem = "#8C6D31FF",
+        pltct <- c(Bcell_cord = "#9C9EDEFF", Bnv = "#7375B5FF", Bmem = "#4A5584FF", Bcell = "#7375B5FF",
+                   CD4T_cord = "#CEDB9CFF", CD4nv = "#B5CF6BFF", CD4mem = "#637939FF", Treg = "#8CA252FF", CD4T = "#B5CF6BFF",
+                   CD8T_cord = "#E7CB94FF", CD8nv = "#E7BA52FF", CD8mem = "#8C6D31FF", CD8T = "#E7BA52FF",
                    NK_cord = "#7BBCB0FF", NK = "#3A7C89FF", Mono_cord = "#F3CBD3FF", Mono = "#707070",
                    Gran_cord = "#D39C83FF", Neu = "#A65461FF", Bas = "#7B4173FF", Eos = "#A55194FF",
                    nRBC = "#843C39FF", PBMC = "#A5AA99", WBC = "#252525FF")

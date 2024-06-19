@@ -7,7 +7,7 @@ splitit <- function(x) {
 ##############################################################################################################
 
 
-pickCompProbes2 <- function(betas, meta, nP, ct, ps = "any", trainingProbes = NULL, p.val = 1e-8, min.delta.beta = 0, plot) {
+pickCompProbes2 <- function(betas, meta, nP, ct, ps = c("any", "both"), trainingProbes = NULL, p.val = 1e-8, min.delta.beta = 0, plot) {
 
     df <- as.matrix(betas)
     pd <- as.data.frame(meta)
@@ -115,7 +115,6 @@ CP <- function(samp.n, coef, conditions = NULL) {
     return(ctEst)
 }
 
-
 #############################################################################################################
 
 RPC <- function(samp.n, coef, conditions = 50) {
@@ -125,15 +124,13 @@ RPC <- function(samp.n, coef, conditions = 50) {
         out <- summary(fit)$coef[, 1]
         out[out < 0] <- 0
         out <- out/sum(out)
-        length(out)
-        # return(out)
+        # length(out)
+        return(out)
     }) %>% t()
     return(ctEst)
 }
 
-
 #############################################################################################################
-
 
 SVR <- function(samp.n, coef, conditions = c(0.25, 0.5, 0.75)) {
 
@@ -160,7 +157,6 @@ SVR <- function(samp.n, coef, conditions = c(0.25, 0.5, 0.75)) {
     return(ctEstF)
 }
 
-
 #############################################################################################################
 
 getErrorPerSample <- function(applyIndex, predictedIN,
@@ -178,7 +174,6 @@ getErrorPerSample <- function(applyIndex, predictedIN,
     error <- RMSE(trueBulk, betasBulkIN[, applyIndex])
     return(error)
 }
-
 
 #############################################################################################################
 

@@ -7,7 +7,7 @@
 pickProbes(
   dataNormed,
   probeList = c("Ttest", "Caret", "IDOL", "DHS"),
-  probeSelect,
+  probeSelect = c("any", "both"),
   nProbes,
   caretMods = c("lasso", "EL", "BLR", "CART", "RF", "GBM", "GAnLDA", "GAnRF", "GAnNB",
     "GAnSVM", "GAnNN"),

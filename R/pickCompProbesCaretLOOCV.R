@@ -101,7 +101,7 @@ pickCompProbesCaretLOOCV <- function(betas, meta, ct, ps, min.delta.beta, p.val,
         } else if (ps == "any"){
             tout <- tout[tout$p.value < p.val & abs(tout$dm) > min.delta.beta, ]
             tout <- tout[order(abs(tout$dm), decreasing = TRUE), ]
-            tout.top <- rownames(tout.Up)[1:filterK]
+            tout.top <- rownames(tout)[1:filterK]
         }
         df <- df[tout.top, ] %>% t()
 
@@ -416,25 +416,25 @@ pickCompProbesCaretLOOCV <- function(betas, meta, ct, ps, min.delta.beta, p.val,
     })
     names(probeList) <- ct
 
-    combinedprobes <- lapply(caretMods, function(fs){ # Combine all probes
-        probes <- lapply(probeList, function(x){
-            out <- x[[fs]][["coefs"]]
-            return(out)
-        })
-        trainingProbes <- unlist(probes)
-        return(trainingProbes)
-    }) %>% do.call(c, .) %>% unique()
-    dfComb <- df[combinedprobes, ] # Subset down the reference data to the selected probes - remove duplicated CpG since they generate the same coefficients
-    mod <- stats::model.matrix(~ pd$cellType - 1) %>% as.data.frame()
-    colnames(mod) <- levels(pd$cellType)
-    form <- stats::as.formula(sprintf("bt ~ %s - 1", paste(ct, collapse = " + ")))
-    coefComb <- sapply(1:nrow(dfComb), function(probe){
-        mod$bt <- df[probe, ]
-        fit <- stats::lm(form, data = mod[stats::complete.cases(mod), ]) # Remove samples with missing methylation values
-        fitCoef <- fit$coef
-        return(fitCoef)
-    }) %>% t() %>% as.data.frame()
-    rownames(coefComb) <- rownames(dfComb)
+    # combinedprobes <- lapply(caretMods, function(fs){ # Combine all probes
+    #     probes <- lapply(probeList, function(x){
+    #         out <- x[[fs]][["coefs"]]
+    #         return(out)
+    #     })
+    #     trainingProbes <- unlist(probes)
+    #     return(trainingProbes)
+    # }) %>% do.call(c, .) %>% unique()
+    # dfComb <- df[combinedprobes, ] # Subset down the reference data to the selected probes - remove duplicated CpG since they generate the same coefficients
+    # mod <- stats::model.matrix(~ pd$cellType - 1) %>% as.data.frame()
+    # colnames(mod) <- levels(pd$cellType)
+    # form <- stats::as.formula(sprintf("bt ~ %s - 1", paste(ct, collapse = " + ")))
+    # coefComb <- sapply(1:nrow(dfComb), function(probe){
+    #     mod$bt <- df[probe, ]
+    #     fit <- stats::lm(form, data = mod[stats::complete.cases(mod), ]) # Remove samples with missing methylation values
+    #     fitCoef <- fit$coef
+    #     return(fitCoef)
+    # }) %>% t() %>% as.data.frame()
+    # rownames(coefComb) <- rownames(dfComb)
 
     probeCoefs <- lapply(caretMods, function(fs){
         probes <- lapply(probeList, function(x){
@@ -457,7 +457,7 @@ pickCompProbesCaretLOOCV <- function(betas, meta, ct, ps, min.delta.beta, p.val,
         return(coef)
     })
     names(probeCoefs) <- caretMods
-    probeCoefs[["combined"]] <- coefComb
+    # probeCoefs[["combined"]] <- coefComb
 
     return(list(probeCoefs = probeCoefs, probeList = probeList))
 }

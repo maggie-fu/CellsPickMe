@@ -2,10 +2,13 @@
 #'
 #' @importFrom rlang .data
 #'
-#' @param ref A character representing the reference dataset, with the options of "Reinius", "IDOL", "IDOL_extended", "Mixed", "Cord", "DLPFC", and "Middleton"
-#' @param normType a character representing the normalization method, with the options of "None", "Noob", "Funnorm", "Quantile"
+#' @param ref A character representing the reference dataset, with the options of
+#' "Reinius", "IDOL", "IDOL_extended", "Mixed", "Cord", "DLPFC", and "Middleton"
+#' @param normType a character representing the normalization method, with the
+#' options of "None", "Noob", "Funnorm", "Quantile"
 #'
-#' @return A list of the requested reference data set (RGchannelSet Object) and the cell types of the sample (vector of character)
+#' @return A list of the requested reference data set (RGchannelSet Object) and
+#' the cell types of the sample (vector of character)
 #' @export
 #'
 #' @examples

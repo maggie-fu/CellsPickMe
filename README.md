@@ -24,24 +24,6 @@ You can install the development version of CellsPickMe from
 # install.packages("devtools")
 library(devtools)
 devtools::install_github("maggie-fu/CellsPickMe")
-#> parallelly (1.37.0 -> 1.37.1) [CRAN]
-#> digest     (0.6.34 -> 0.6.35) [CRAN]
-#> data.table (1.15.0 -> 1.15.2) [CRAN]
-#> package 'parallelly' successfully unpacked and MD5 sums checked
-#> package 'digest' successfully unpacked and MD5 sums checked
-#> package 'data.table' successfully unpacked and MD5 sums checked
-#> 
-#> The downloaded binary packages are in
-#>  C:\Users\suanni\AppData\Local\Temp\RtmpMP1pqK\downloaded_packages
-#> ── R CMD build ─────────────────────────────────────────────────────────────────
-#>          checking for file 'C:\Users\suanni\AppData\Local\Temp\RtmpMP1pqK\remotes89f05b765c75\maggie-fu-CellsPickMe-e5a13a0/DESCRIPTION' ...  ✔  checking for file 'C:\Users\suanni\AppData\Local\Temp\RtmpMP1pqK\remotes89f05b765c75\maggie-fu-CellsPickMe-e5a13a0/DESCRIPTION'
-#>       ─  preparing 'CellsPickMe': (518ms)
-#>    checking DESCRIPTION meta-information ...     checking DESCRIPTION meta-information ...   ✔  checking DESCRIPTION meta-information
-#>       ─  checking for LF line-endings in source and make files and shell scripts
-#>   ─  checking for empty or unneeded directories
-#>       ─  building 'CellsPickMe_0.0.0.9000.tar.gz'
-#>      
-#> 
 ```
 
 ## Usage
@@ -90,6 +72,8 @@ traditional T-test, or with machine-learning-based methods such as
 elastic net and random forest to obtain a curated list of features that
 are highly predictive of cell types
 
+Here is the T-test based feature selection method.
+
 ``` r
 # Pick probes with T tests
 probes <- pickProbes(dataNormed = comb_dat, 
@@ -103,10 +87,12 @@ probes <- pickProbes(dataNormed = comb_dat,
 #> Estimating Weights for Cell Type Prediction Based on Selected Probeset.
 ```
 
-<img src="man/figures/README-pickProbes-1.png" width="100%" />
+<img src="man/figures/README-pickProbes1-1.png" width="100%" />
+
+Alternatively, here are some options for machine-learning-based feature
+selection.
 
 ``` r
-
 ### Set up server for parallelization - run the code if picking probes with Caret
 library(doParallel)
 cl <- makeCluster(detectCores() - 1) # change as needed
@@ -116,6 +102,9 @@ registerDoParallel(cl)
 probes <- pickProbes(dataNormed = comb_dat, 
                      probeList = "Caret_CV", #c("Caret_CV", "Caret_LOOCV")
                      caretMods = c("lasso", "EL"),  #c("lasso", "EL", "BLR", "CART", "RF", "GBM", "PLDA", "GAnRF", "GAnNB", "GAnSVM", "GAnNN")
+                     probeSelect = "any",
+                     p.val = 1, 
+                     min.delta.beta = 0,
                      filterK = 1000, # number of probes to put into the predictor for each cell type
                      seed = 1, 
                      plotRef = F, # plot heatmap?
@@ -132,9 +121,6 @@ the correct cluster (cell type labeling) in reference data
 clustAU <- identClust(dataNormed = comb_dat,
                       probes = probes,
                       parallel = TRUE)
-#> Creating a temporary cluster...done:
-#> socket cluster with 15 nodes on host 'localhost'
-#> Multiscale bootstrap... Done.
 #> Creating a temporary cluster...done:
 #> socket cluster with 15 nodes on host 'localhost'
 #> Multiscale bootstrap... Done.

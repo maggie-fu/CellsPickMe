@@ -66,7 +66,8 @@ comb_dat <- combData(dataset = test_dat,
 
 The **CellsPickMe** package supports feature selection with either the traditional T-test, or with machine-learning-based methods such as elastic net and random forest to obtain a curated list of features that are highly predictive of cell types
 
-```{r pickProbes, message = FALSE, warning = FALSE}
+Here is the T-test based feature selection method.
+```{r pickProbes1, message = FALSE, warning = FALSE}
 # Pick probes with T tests
 probes <- pickProbes(dataNormed = comb_dat, 
                      probeList = "Ttest", #c("Ttest", "IDOL", "DHS")
@@ -77,6 +78,11 @@ probes <- pickProbes(dataNormed = comb_dat,
                      plotRef = T, # plot heatmap?
                      verbose = T)
 
+
+```
+
+Alternatively, here are some options for machine-learning-based feature selection.
+```{r pickProbes2, message = FALSE, warning = FALSE}
 ### Set up server for parallelization - run the code if picking probes with Caret
 library(doParallel)
 cl <- makeCluster(detectCores() - 1) # change as needed
@@ -86,11 +92,15 @@ registerDoParallel(cl)
 probes <- pickProbes(dataNormed = comb_dat, 
                      probeList = "Caret_CV", #c("Caret_CV", "Caret_LOOCV")
                      caretMods = c("lasso", "EL"),  #c("lasso", "EL", "BLR", "CART", "RF", "GBM", "PLDA", "GAnRF", "GAnNB", "GAnSVM", "GAnNN")
+                     probeSelect = "any",
+                     p.val = 1, 
+                     min.delta.beta = 0,
                      filterK = 1000, # number of probes to put into the predictor for each cell type
                      seed = 1, 
                      plotRef = F, # plot heatmap?
                      verbose = F)
 ```
+
 
 ### Assess clustering stability
 

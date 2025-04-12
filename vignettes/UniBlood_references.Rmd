@@ -1,0 +1,179 @@
+---
+title: "UniBlood Reference Creation"
+author: "Maggie Fu"
+date: "`r Sys.Date()`"
+output: 
+    rmdformats::downcute:
+        downcute_theme: "chaos"
+---
+
+## Overview
+
+This readme documents the creation process of the UniBlood sorted cell DNAme references used in the CellsPickMe R package. The package deconvolute cellular composition of cord, pediatric, and adult blood samples based on their DNA methylation (DNAme) profile, as measured on Illumina methylation arrays (compatible with HM450k, EPICv1, and EPICv2)
+
+```{r load packages, message = FALSE, warning = FALSE}
+library(ExperimentHub)
+library(minfi)
+library(dplyr)
+library(ggplot2)
+```
+
+### UniBlood references
+
+The UniBlood references, including UniBlood7, UniBlood13, and UniBlood19, were generated based on combining preexisting cord blood and adult blood-based references. By combining sorted cells' DNAme from these two distinct developmental time points, we aimed to capture cell-type-specific signals that account for changes in the hematopoietic landscape. The composition of each UniBlood references is shown in Table 1.
+
+**Table 1**. Cellular composition and dataset included for the three reference datasets we compiled in this study, UniBlood7, UniBlood13, and UniBlood19.
+
+|  |  |  |  |
+|-----------------|-----------------|-----------------|----------------------|
+|  | UniBlood7 | UniBlood13 | UniBlood19 |
+| FlowSorted.Blood.450k (Reinius) | 🗸 |  |  |
+| FlowSorted.Blood.EPIC (IDOL) | 🗸 | only monocytes, neutrophils, and NK cells | only monocytes, neutrophils, and NK cells |
+| FlowSorted.Blood.Extended.EPIC (Extended) |  | 🗸 | 🗸 |
+| FlowSorted.CordBlood.450k (Cord) | 🗸 | 6 randomly selected nRBC samples | 6 randomly selected samples for every cell type |
+| Adult and cord cell types grouped? | Yes | No | No |
+| Cell types included | **Seven cell types**: B cells, CD4+ T cells, CD8+ T cells, NK cells, monocytes, granulocytes, and nRBCs | **Thirteen cell types**: naïve and memory B cells, naïve and memory CD4+ T cells, naïve and memory CD8+ T cells, Tregs, NK cells, monocytes, neutrophils, basophils, eosinophils, and nRBCs | **Nineteen cell types**: neonatal, naïve, and memory B cells, neonatal, naïve, and memory CD4+ T cells, neonatal, naïve, and memory CD8+ T cells, adult Tregs, neonatal and adult NK cells, neonatal and adult monocytes, neonatal granulocytes, adult neutrophils, basophils, and eosinophils, and nRBCs |
+
+#### Load existing reference datasets
+
+```{r load references, eval = FALSE}
+hub <- ExperimentHub()
+
+### Extended reference
+query(hub, "FlowSorted.BloodExtended.EPIC")  
+FlowSorted.BloodExtended.EPIC <- hub[["EH5425"]]
+n
+FlowSorted.BloodExtended.EPIC <- FlowSorted.BloodExtended.EPIC[, FlowSorted.BloodExtended.EPIC$Sample_Group != "FlowSorted.Blood.EPIC"]
+meta_1 <- pData(FlowSorted.BloodExtended.EPIC)
+meta_1 <- meta_1[, c("Sex", "Age", "CellType", "Ethnicity_wide", "purity")]
+meta_1$Ref <- "Extended"
+
+### IDOL reference
+FlowSorted.Blood.EPIC <- FlowSorted.Blood.EPIC::libraryDataGet('FlowSorted.Blood.EPIC')
+meta_2 <- pData(FlowSorted.Blood.EPIC)
+meta_2 <- meta_2[, c("Sex", "Age", "CellType", "Ethnicity_wide", "purity")]
+meta_2$Ref <- "IDOL"
+
+### Cord reference
+FlowSorted.CordBlood.450k <- FlowSorted.CordBloodCombined.450k::libraryDataGet('FlowSorted.CordBloodCombined.450k')
+meta_3 <- pData(FlowSorted.CordBlood.450k)
+meta_3 <- meta_3[, c("Sex", "Age", "CellType")] %>% cbind(., Ethnicity_wide = NA, purity = NA)
+meta_3$Ref <- "Cord"
+
+### Reinius
+library(FlowSorted.Blood.450k)
+data("FlowSorted.Blood.450k")
+meta_4 <- pData(FlowSorted.Blood.450k)
+meta_4 <- meta_4[, c("Sex", "CellType")] %>% cbind(., Age = NA, Ethnicity_wide = NA, purity = NA)
+meta_4$Ref <- "Reinius"
+```
+
+### UniBlood7
+
+UniBlood7 includes the Reinius, Cord, and IDOL references. With only 7 cell types, the reference treat neonatal and adult cells of the same identity (e.g. CD4T cells) as one cell type.
+
+```{r UniBlood7, eval = FALSE}
+Ref_meta <- do.call(rbind, list(meta_2, meta_3, meta_4))
+
+# Combine reference datasets
+UniBlood7 <- combineArrays(FlowSorted.Blood.450k, 
+                           FlowSorted.Blood.EPIC, 
+                           outType = "IlluminaHumanMethylation450k")
+UniBlood7 <- combineArrays(UniBlood7, 
+                           FlowSorted.CordBlood.450k, 
+                           outType = "IlluminaHumanMethylation450k")
+
+UniBlood7_meta <- Ref_meta[sampleNames(UniBlood7), ]
+pData(UniBlood7) <- UniBlood7_meta
+
+save(UniBlood7, compression_level = 9, file = "data/UniBlood7.rda")
+```
+
+### UniBlood13
+
+UniBlood13 is mostly built on the Extended reference, with additional samples from the IDOL reference and nRBCs from the Cord reference. With 13 cell types, the reference assumes that neonatal and adult cells share similar DNAme profiles except for the nRBCs, which only exist at the neonatal time point.
+
+```{r UniBlood13, eval = FALSE}
+Ref_meta <- do.call(rbind, list(meta_1, meta_2, meta_3))
+
+# Select samples to exclude from cord blood samples based on odd clustering from PCA
+samp_IDOL <- rownames(meta_2)[meta_2$CellType %in% c("Mono", "Neu", "NK")]
+
+samp_Extended <- rownames(meta_1)[meta_1$CellType != "MIX"]
+
+FlowSorted.CordBlood.nRBC <- FlowSorted.CordBlood.450k[, meta_3$CellType == "nRBC"]
+
+# Combine reference datasets
+UniBlood13 <- combineArrays(FlowSorted.BloodExtended.EPIC[, samp_Extended], 
+                            FlowSorted.Blood.EPIC[, samp_IDOL], 
+                            outType = "IlluminaHumanMethylationEPIC")
+UniBlood13 <- combineArrays(UniBlood13, 
+                            FlowSorted.CordBlood.nRBC, 
+                            outType = "IlluminaHumanMethylation450k")
+
+UniBlood13_meta <- Ref_meta[sampleNames(UniBlood13), ]
+pData(UniBlood13) <- UniBlood13_meta
+
+save(UniBlood13, compression_level = 9, file = "data/UniBlood13.rda")
+```
+
+### UniBlood19
+
+Finally, UniBlood19 is the reference with the most cell types. It combines reference datasets from Extended, Cord, and IDOL. The reference treated neonatal and adult cells as distinct identities, with the cord blood cells labelled with the "\_cord" suffix.
+
+```{r UniBlood19, eval = FALSE}
+Ref_meta <- do.call(rbind, list(meta_1, meta_2, meta_3))
+
+# Select samples to exclude from cord blood samples based on odd clustering from PCA
+out <- c("X3999492113_R01C01", 
+         "X3999492113_R06C02", 
+         "X3999997142_R02C02", 
+         "X3999984059_R01C02", 
+         "X3999492043_R06C01", 
+         "X3999984058_R06C01", 
+         "X201868590206_R06C01", 
+         "3999492043_R06C01", 
+         "3999984058_R06C01", 
+         "200705360101_R04C01", 
+         "Gran_4", 
+         "Gran_5", 
+         "200705360089_R06C01", 
+         "200705360058_R07C01", 
+         "200693480131_R02C01", 
+         "3999984059_R04C02", 
+         "200705360013_R06C01", 
+         "200705360068_R02C01", 
+         "3999492113_R01C01", 
+         "CD8+_6", 
+         "200705360060_R06C01", 
+         "3999997142_R03C01",
+         "200693480078_R02C01")
+
+Ref_meta <- Ref_meta[!rownames(Ref_meta) %in% out, ]
+
+set.seed(1234)
+samp_Cord <- sapply(c("CD4T", "NK", "nRBC", "Bcell", "Mono", "Gran", "CD8T", "WBC"), function(x){
+    sample(rownames(Ref_meta)[Ref_meta$CellType == x & Ref_meta$Ref == "Cord"], size = 10)
+}) %>% as.vector()
+
+samp_IDOL <- rownames(meta_2)[meta_2$CellType %in% c("Mono", "Neu", "NK")]
+
+samp_Extended <- rownames(meta_1)#[meta_1$CellType != "MIX"]
+
+# Rename cord blood cells
+Ref_meta$CellType[Ref_meta$Ref == "Cord"] <- paste0(Ref_meta$CellType[Ref_meta$Ref == "Cord"], "_cord") %>%
+    gsub("nRBC_cord", "nRBC", .)
+
+# Combine reference datasets
+UniBlood19 <- combineArrays(FlowSorted.BloodExtended.EPIC[, samp_Extended], 
+                            FlowSorted.Blood.EPIC[, samp_IDOL], 
+                            outType = "IlluminaHumanMethylationEPIC")
+UniBlood19 <- combineArrays(UniBlood19, 
+                            FlowSorted.CordBlood.450k[, samp_Cord], 
+                            outType = "IlluminaHumanMethylation450k")
+
+UniBlood19_meta <- Ref_meta[sampleNames(UniBlood19), ]
+pData(UniBlood19) <- UniBlood19_meta
+
+save(UniBlood19, compression_level = 9, file = "data/UniBlood19.rda")
+```

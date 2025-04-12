@@ -4,14 +4,9 @@ author:
 - name: Maggie Fu
   email: maggie.fu@bcchr.ca
   affiliation: The University of British Columbia
-output:
-  BiocStyle::html_document:
-    number_sections: true
-    toc: true
-    toc_float: true
-    toc_depth: 4
-  BiocStyle::pdf_document: default
-package: RAMEN
+output: 
+    rmdformats::downcute:
+        downcute_theme: "chaos"
 vignette: >
   %\VignetteIndexEntry{CellsPickMe}
   %\VignetteEngine{knitr::rmarkdown}
@@ -30,21 +25,21 @@ knitr::opts_chunk$set(
 
 **CellsPickMe** is a comprehensive R package for cell type proportion prediction based on DNA methylation data. As cell identity is crucially linked to cell function and DNA methylation profile, estimation of cell type proportion is instrumental to understanding major factors driving DNA methylation variability. Accounting for inter-individual cellular heterogeneity is also vital in epigenome-wide association studies (EWAS) to accurately evaluate the signals associated with the variables of interest. 
 
-The main purpose of the RAMEN package is to conduct a methylome-wide analysis to identify which model (G, E, G+E or GxE) better explains the variability across the genome. In this vignette, we will illustrate how to use the package. 
+The **CellsPickMe** package takes DNA methylation data generated from Illumina microarray and predict its cellular composition based on cell types available in the reference profiles. Currently, the algorithm is compatible for peripheral blood, cord blood, saliva, and brain (neuron vs non-neuron). The table below illustrate the reference datasets available in the **CellsPickMe** package for deconvolution. We curated the UniBlood references (7, 13, and 19) to address the current challenge in deconvoluting longitudinal and pediatric blood samples.  
 
 ```{r modelstable, echo=FALSE}
 library(knitr)
 
-models = data.frame(Tissue = c("Peripheral blood", "Cord blood", "Saliva", "Brain"),
-                    Reference_dataset = c("Reinius (2012)", "IDOL (2016)", "IDOL extended (2022)", "Mixed", "Cord (2018)", "Middleton (2022)", "Brain (2012)")) 
+models = data.frame(Tissue = c("Adult peripheral blood", "Adult peripheral blood", "Adult peripheral blood", "Cord and adult peripheral blood", "Cord and adult peripheral blood", "Cord and adult peripheral blood", "Cord blood", "Saliva", "Brain"),
+                    Reference_dataset = c("Reinius (2012)", "IDOL (2016)", "IDOL extended (2022)", "UniBlood7", "UniBlood13", "UniBlood19", "Cord (2018)", "Middleton (2022)", "Brain (2012)")) 
 
-kable(models, caption = 'Available Tissues')
+kable(models, caption = 'Available reference datasets for tissues in CellsPickMe')
 ```
 
-The **CellsPickMe** package takes DNA methylation data generated from Illumina microarray and predict its cellular composition based on cell types available in the reference profiles. Currently, the algorithm is compatible for peripheral blood, cord blood, saliva, and brain (neuron vs non-neuron).
+The figure below focused on our optimization of the deconvolution pipeline in the blood tissue. The four main steps of cellular deconvolution are reference selection, data normalization, feature selection, and regression. The function that 
 
-```{r,echo= FALSE, fig.cap="CellsPickMe pipeline"}
-knitr::include_graphics("CellsPickMe_pipeline.png")
+```{r, echo = FALSE, fig.cap="CellsPickMe pipeline"}
+knitr::include_graphics("CellsPickMe_pipeline.pdf")
 ```
 
 ## Citation 
@@ -73,9 +68,9 @@ The following data are required for performing the cell type proportion predicti
 
 ## Installation
 
-```{r}
+```{r install CellsPickMe, eval = FALSE}
 library(devtools)
-install_github(maggie-fu/CellsPickMe)
+devtools::install_github("maggie-fu/CellsPickMe")
 ```
 
 ## Usage
@@ -132,7 +127,7 @@ registerDoParallel(cl)
 
 # Pick probes with repeated cross validation with lasso and elastic net
 probes <- pickProbes(dataNormed = comb_dat, 
-                     probeList = "Caret_CV", #c("Ttest", "Caret_CV", "Caret_LOOCV", "IDOL", "DHS")
+                     probeList = "Caret_LOOCV", #c("Ttest", "Caret_CV", "Caret_LOOCV", "IDOL", "DHS")
                      caretMods = c("lasso", "EL"),  #c("lasso", "EL", "BLR", "CART", "RF", "GBM", "PLDA", "GAnRF", "GAnNB", "GAnSVM", "GAnNN")
                      filterK = 1000, # number of probes to put into the predictor for each cell type
                      seed = 1, 

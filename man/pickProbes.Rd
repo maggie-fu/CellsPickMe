@@ -20,41 +20,57 @@ pickProbes(
 )
 }
 \arguments{
-\item{dataNormed}{A list of dataframe containing the normalized data, output of \code{combData()}}
+\item{dataNormed}{A list of dataframe containing the normalized data, output
+of \code{combData()}}
 
-\item{probeList}{A character, specifying how the probe should be selected. Options include "Ttest", "Caret_CV", "Caret_LOOCV", and "IDOL"}
+\item{probeList}{A character, specifying how the probe should be selected.
+Options include "Ttest", "Caret_CV", "Caret_LOOCV", and "IDOL"}
 
-\item{probeSelect}{If \code{probeSelect = Ttest}, specify how should the top probes be picked from T test output, options include "both", "any", "pval"}
+\item{probeSelect}{If \code{probeSelect = Ttest}, specify how should the top
+probes be picked from T test output, options include "both", "any", "pval"}
 
-\item{nProbes}{An integer specifying the number of probes to pick for each cell type}
+\item{nProbes}{An integer specifying the number of probes to pick for
+each cell type}
 
-\item{caretMods}{If \code{probeSelect \%in\% c("Caret_CV", "Caret_LOOCV")}, input a vector of characters that specify the models to use for feature selection}
+\item{caretMods}{If \code{probeSelect \%in\% c("Caret_CV", "Caret_LOOCV")}, input
+a vector of characters that specify the models to use for feature selection}
 
 \item{seed}{An integer specifying the seed for reproducibility}
 
-\item{p.val}{If \code{probeSelect = Ttest}, specify a numeric value for maximum pvalue cutoff}
+\item{p.val}{If \code{probeSelect = Ttest}, specify a numeric value for maximum
+pvalue cutoff}
 
-\item{min.delta.beta}{If \code{probeSelect = Ttest}, specify a numeric value for minimum delta beta (effect size) cutoff}
+\item{min.delta.beta}{If \code{probeSelect = Ttest}, specify a numeric value for
+minimum delta beta (effect size) cutoff}
 
-\item{filterK}{If \code{probeSelect \%in\% c("Caret_CV", "Caret_LOOCV")}, input an integer representing the number probes to input to the machine learning algorithms with top T test probes}
+\item{filterK}{If \code{probeSelect \%in\% c("Caret_CV", "Caret_LOOCV")}, input an
+integer representing the number probes to input to the machine learning
+algorithms with top T test probes}
 
-\item{plotRef}{A Boolean specifying whether to plot a heatmap showing the clustering performance using the probes selected}
+\item{plotRef}{A Boolean specifying whether to plot a heatmap showing the
+clustering performance using the probes selected}
 
-\item{verbose}{A Boolean specifying whether the function should be verbose or not}
+\item{verbose}{A Boolean specifying whether the function should be verbose
+or not}
 }
 \value{
-A list containing the features selected by the specified methods, and the coefficients of the selected probes for downstream prediction
+A list containing the features selected by the specified methods,
+and the coefficients of the selected probes for downstream prediction
 }
 \description{
 Pick features for cell type prediction
 }
 \examples{
-# Load example blood cell mixture, subsetted from the IDOL dataset (GSE110554)
+# Load example blood cell mixture, subsetted from IDOL dataset (GSE110554)
 test_dat <- CellsPickMe::IDOL_mixed_cells
 # Obtain reference data set with the `getRef()` function
 ref_dat <- getRef(ref = "IDOL", normType = "None")
-# Combine sample and reference data sets together, followed by normalization (if selected)
-comb_dat <- combData(dataset = test_dat, reference = ref_dat$reference, class = "rgset", normType = "None", cellTypes = ref_dat$cellTypes)
+# Combine sample and reference data sets together,
+followed by normalization (if selected)
+comb_dat <- combData(dataset = test_dat, reference = ref_dat$reference,
+class = "rgset", normType = "None", cellTypes = ref_dat$cellTypes)
 # Pick probes with repeated cross validation with lasso and elastic net
-probes <- pickProbes(dataNormed = comb_dat, probeList = "Caret_CV", caretMods = c("lasso", "EL"), filterK = 1000, seed = 1)
+probes <- pickProbes(dataNormed = comb_dat, probeList = "Caret_CV",
+caretMods = c("lasso", "EL"), probeSelect = "any", p.val = 1,
+min.delta.beta = 0, filterK = 1000, seed = 1)
 }

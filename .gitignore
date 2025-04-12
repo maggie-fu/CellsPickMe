@@ -51,3 +51,9 @@ rsconnect/
 # Behind the scene file
 *BTS*
 docs
+
+# Data
+data/idol.a_ext.rda
+data/UniBlood7.rda
+data/UniBlood13.rda
+data/UniBlood19.rda

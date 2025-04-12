@@ -76,7 +76,7 @@ pickProbes <- function(dataNormed,
         coefs <- pickCompProbesCaret(betas = dataNormed$ref.n,
                                      meta = dataNormed$refMeta,
                                      ct = dataNormed$cellTypes,
-                                     ps = probeSelect,
+                                     ps = "both",
                                      p.val = p.val,
                                      min.delta.beta = min.delta.beta,
                                      caretMods = caretMods,
@@ -88,7 +88,7 @@ pickProbes <- function(dataNormed,
         coefs <- pickCompProbesCaretLOOCV(betas = dataNormed$ref.n,
                                           meta = dataNormed$refMeta,
                                           ct = dataNormed$cellTypes,
-                                          ps = probeSelect,
+                                          ps = "both",
                                           p.val = p.val,
                                           min.delta.beta = min.delta.beta,
                                           caretMods = caretMods,
@@ -102,7 +102,8 @@ pickProbes <- function(dataNormed,
                 pLib <- idol.c
             } else if (nrow(dataNormed$samp.n) > 622399) {
                 if ("CD8nv" %in% dataNormed$cellTypes) {
-                    pLib <- idol.a_ext
+                    warning("Please contact the Dartmouth University according to https://github.com/immunomethylomics/FlowSorted.BloodExtended.EPIC for access to the IDOL probes for the Extended reference.\n")
+                    # pLib <- idol.a_ext
                 } else {
                     pLib <- idol.a_EPIC
                 }

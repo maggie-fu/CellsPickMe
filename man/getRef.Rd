@@ -10,12 +10,15 @@ getRef(
 )
 }
 \arguments{
-\item{ref}{A character representing the reference dataset, with the options of "Reinius", "IDOL", "IDOL_extended", "Mixed", "Cord", "DLPFC", and "Middleton"}
+\item{ref}{A character representing the reference dataset, with the options of
+"Reinius", "IDOL", "IDOL_extended", "Mixed", "Cord", "DLPFC", and "Middleton"}
 
-\item{normType}{a character representing the normalization method, with the options of "None", "Noob", "Funnorm", "Quantile"}
+\item{normType}{a character representing the normalization method, with the
+options of "None", "Noob", "Funnorm", "Quantile"}
 }
 \value{
-A list of the requested reference data set (RGchannelSet Object) and the cell types of the sample (vector of character)
+A list of the requested reference data set (RGchannelSet Object) and
+the cell types of the sample (vector of character)
 }
 \description{
 Extract the correct reference data set

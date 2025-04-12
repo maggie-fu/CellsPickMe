@@ -7,7 +7,7 @@ output:
         downcute_theme: "chaos"
 ---
 
-## Overview
+### Overview
 
 This readme documents the creation process of the UniBlood sorted cell DNAme references used in the CellsPickMe R package. The package deconvolute cellular composition of cord, pediatric, and adult blood samples based on their DNA methylation (DNAme) profile, as measured on Illumina methylation arrays (compatible with HM450k, EPICv1, and EPICv2)
 

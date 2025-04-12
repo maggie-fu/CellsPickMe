@@ -14,39 +14,36 @@ vignette: >
 ---
 
 
-```{r, include = FALSE}
+```{r, echo = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>"
+  warnings = FALSE,
+  message = FALSE
 )
 ```
 
-# Introduction 
+## Introduction 
 
-**CellsPickMe** is a comprehensive R package for cell type proportion prediction based on DNA methylation data. As cell identity is crucially linked to cell function and DNA methylation profile, estimation of cell type proportion is instrumental to understanding major factors driving DNA methylation variability. Accounting for inter-individual cellular heterogeneity is also vital in epigenome-wide association studies (EWAS) to accurately evaluate the signals associated with the variables of interest. 
+**CellsPickMe** is a streamlined R package for cell type proportion prediction in a heterogeneous tissue (i.e. deconvolution) based on DNA methylation (DNAme) data. As cell identity is crucially linked to cell function and DNAme profiles, estimation of cell type proportion is instrumental to understanding major factors driving DNAme variability. Accounting for inter-individual cellular heterogeneity is also vital in epigenome-wide association studies to accurately evaluate the signals associated with the variables of interest. 
 
-The **CellsPickMe** package takes DNA methylation data generated from Illumina microarray and predict its cellular composition based on cell types available in the reference profiles. Currently, the algorithm is compatible for peripheral blood, cord blood, saliva, and brain (neuron vs non-neuron). The table below illustrate the reference datasets available in the **CellsPickMe** package for deconvolution. We curated the UniBlood references (7, 13, and 19) to address the current challenge in deconvoluting longitudinal and pediatric blood samples.  
+The **CellsPickMe** package takes DNAme data generated from Illumina microarray and predict its cellular composition based on cell types available in the reference profiles. Currently, the algorithm is compatible for peripheral blood, cord blood, saliva, and brain (neuron vs non-neuron). The table below illustrate the reference datasets available in the **CellsPickMe** package for deconvolution. We curated the UniBlood references (7, 13, and 19) to address the current challenge in deconvoluting longitudinal and pediatric blood samples. Refer to the [UniBlood Reference Creation][UniBlood Reference Creation] article for details of the UniBlood references.
 
-```{r modelstable, echo=FALSE}
+```{r references, echo = FALSE, warnings = FALSE, message = FALSE}
 library(knitr)
 
-models = data.frame(Tissue = c("Adult peripheral blood", "Adult peripheral blood", "Adult peripheral blood", "Cord and adult peripheral blood", "Cord and adult peripheral blood", "Cord and adult peripheral blood", "Cord blood", "Saliva", "Brain"),
-                    Reference_dataset = c("Reinius (2012)", "IDOL (2016)", "IDOL extended (2022)", "UniBlood7", "UniBlood13", "UniBlood19", "Cord (2018)", "Middleton (2022)", "Brain (2012)")) 
+references = data.frame(Tissue = c("Adult peripheral blood", "Adult peripheral blood", "Adult peripheral blood", "Cord and adult peripheral blood", "Cord and adult peripheral blood", "Cord and adult peripheral blood", "Cord blood", "Saliva", "Brain"),
+                    Reference_dataset = c("Reinius (2012)", "IDOL (2016)", "IDOL extended (2022)", "UniBlood7", "UniBlood13", "UniBlood19", "Cord (2018)", "Middleton (2022)", "DLPFC (2012)")) 
 
-kable(models, caption = 'Available reference datasets for tissues in CellsPickMe')
+kable(references, caption = 'Available reference datasets for tissues in CellsPickMe')
 ```
 
-The figure below focused on our optimization of the deconvolution pipeline in the blood tissue. The four main steps of cellular deconvolution are reference selection, data normalization, feature selection, and regression. The function that 
+The figure below focused on our optimization of the deconvolution pipeline in the blood tissue. The four main steps of cellular deconvolution are reference selection, data normalization, feature selection, and regression. The function that calls each of the step is bolded on the left, and the detail of each function is described in the [Usage][Usage] section. 
 
-```{r, echo = FALSE, fig.cap="CellsPickMe pipeline"}
-knitr::include_graphics("CellsPickMe_pipeline.pdf")
+```{r, echo = FALSE, fig.cap = "CellsPickMe pipeline"}
+knitr::include_graphics("D://Projects/CellsPickMe/vignettes/CellsPickMe_pipeline.pdf")
 ```
 
-## Citation 
-
-The manuscript detailing CellsPickMe and its use is currently under preparation. For more information about this please contact Maggie Fu at [maggie.fu\@bcchr.ca](mailto:maggie.fu@bcchr.ca){.email}.
-
-# Cell type proportion estimation
+# Cell Type Deconvolution
 
 In addition to improved methods for feature selection to optimize prediction process, the package also includes several features to assess prediction accuracy.
 
@@ -58,7 +55,7 @@ The **CellsPickMe** package includes 5 core functions:
 -   `clusterScore()` assesses the performance of selected features in clustering cell types in the reference
 -   `predictCT()` estimate cell type proportions based on selected probes, with the ability to evaluate 
 
-The `pickProbes()` function can be computationally intensive, depending on the methods for feature selection. Parallel computing is available and highly recommended for improved efficiency. Detailed usage is available [here][Step by step guide]
+The `pickProbes()` function can be computationally intensive, depending on the methods for feature selection. Parallel computing is available and highly recommended for improved efficiency. Detailed usage is available [here](CellsPickMe::pickProbes())
 
 The following data are required for performing the cell type proportion prediction with **CellsPickMe**:
 - DNAme data (RGChannelSet Object is recommended, beta matrix is accepted as well)
@@ -68,7 +65,7 @@ The following data are required for performing the cell type proportion predicti
 
 ## Installation
 
-```{r install CellsPickMe, eval = FALSE}
+```{r install CellsPickMe, eval = FALSE, warnings = FALSE, message = FALSE}
 library(devtools)
 devtools::install_github("maggie-fu/CellsPickMe")
 ```
@@ -79,20 +76,20 @@ The **CellsPickMe** package takes DNA methylation data generated from Illumina m
 
 ### Obtain reference dataset
 
-From the available list of reference datasets ("Reinius", "IDOL", "IDOL_extended", "Mixed", "Cord", "DLPFC", and "Middleton"), select one that is appropriate for your sample (based on tissue and sample age)
+From the available list of reference datasets ("Reinius", "IDOL", "IDOL_extended", "UniBlood7", "UniBlood13", "UniBlood19", "Cord", "DLPFC", and "Middleton"), select one that is appropriate for your sample (based on tissue and sample age)
 
-```{r getRef}
+```{r getRef, warnings = FALSE, message = FALSE}
 library(CellsPickMe)
 
 # Request the IDOL reference (2016) with no normalization
 ref_dat <- getRef(ref = "IDOL", normType = "None")
 ```
 
-### Normalize sample and reference datasets together
+## Normalize sample and reference datasets together
 
 Normalize user's sample and reference data sets together to reduce batch effect and improve prediction accuracy
 
-```{r combData}
+```{r combData, warnings = FALSE, message = FALSE}
 # Load example blood cell mixture, subsetted from the IDOL dataset (GSE110554)
 test_dat <- CellsPickMe::IDOL_mixed_cells
  
@@ -107,9 +104,9 @@ comb_dat <- combData(dataset = test_dat,
 
 ### Pick features that best distinguish cell type
 
-The **CellsPickMe** package supports feature selection with either the traditional T-test, or with machine-learning-based methods such as elastic net and random forest to obtain a curated list of features that are highly predictive of cell types
+The **CellsPickMe** package supports feature selection with either the traditional T-test, or with machine-learning-based methods such as elastic net and random forest to obtain a curated list of features that are highly predictive of cell types. 
 
-```{r pickProbes}
+```{r pickProbes, warnings = FALSE, message = FALSE}
 # Pick probes with T tests
 probes <- pickProbes(dataNormed = comb_dat, 
                      probeList = "Ttest", #c("Ttest", "Caret_CV", "Caret_LOOCV", "IDOL", "DHS")
@@ -139,7 +136,7 @@ probes <- pickProbes(dataNormed = comb_dat,
 
 To further evaluate the performance of the selected probes, pvClust can be applied to assess whether the picked probes can be used to generate the correct cluster (cell type labeling) in reference data
 
-```{r pvclust}
+```{r pvclust, warnings = FALSE, message = FALSE}
 clustAU <- identClust(dataNormed = comb_dat,
                       probes = probes,
                       parallel = TRUE)
@@ -149,7 +146,7 @@ clustAU <- identClust(dataNormed = comb_dat,
 
 Finally, the selected features are used to estimate cell type proportions in the sample data set. We also incorporate the CETYGO score (see Reference) to estimate prediction performance even in the absence of a validation cohort / ground truth cell count.
 
-```{r predictCT}
+```{r predictCT, warnings = FALSE, message = FALSE}
 out <- predictCT(dataNormed = comb_dat, 
                  probes = probes, 
                  method = "CP",  #c("CP", "RPC", "SVR")
@@ -157,3 +154,8 @@ out <- predictCT(dataNormed = comb_dat,
                  verbose = T, 
                  cetygo = T) # CETYGO to assess reference appropriateness (RMSE evaluation)
 ```
+
+
+## Citation 
+
+The manuscript detailing CellsPickMe and its use is currently under preparation. For more information about this please contact Maggie Fu at [maggie.fu\@bcchr.ca](mailto:maggie.fu@bcchr.ca){.email}.

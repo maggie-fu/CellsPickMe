@@ -44,3 +44,4 @@ Config/testthat/edition: 3
 Depends: 
     R (>= 2.10)
 LazyData: true
+URL: https://maggie-fu.github.io/CellsPickMe/

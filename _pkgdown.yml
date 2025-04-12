@@ -1,4 +1,6 @@
-url: ~
+url: https://maggie-fu.github.io/CellsPickMe/
 template:
   bootstrap: 5
+  bootswatch: minty
+  light-switch: yes
 

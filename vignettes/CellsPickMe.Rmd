@@ -116,7 +116,7 @@ library(CellsPickMe)
 ref_dat <- getRef(ref = "UniBlood19", normType = "None")
 ```
 
-## Normalize sample and reference datasets together
+### Normalize sample and reference datasets together
 
 Normalize user's sample and reference data sets together to reduce batch effect and improve prediction accuracy
 

@@ -171,13 +171,13 @@ head(out$RF)
 #> 201868590267_R05C01 0.12980382 0.15364182 0.03794995 0.02618161 0.09471185
 #> 201869680008_R01C01 0.29098662 0.14490082 0.17136579 0.08515400 0.21821297
 #> 201869680008_R03C01 0.09642377 0.13975148 0.04651692 0.03460012 0.08708938
-#>                          Gran     CETYGO nCGmissing
-#> 201868590193_R01C01 0.2138328 0.05366570          0
-#> 201868590243_R02C01 0.6566618 0.03948246          0
-#> 201868590267_R01C01 0.6989066 0.03682644          0
-#> 201868590267_R05C01 0.5894684 0.04166677          0
-#> 201869680008_R01C01 0.1258030 0.04975795          0
-#> 201869680008_R03C01 0.6286077 0.04023896          0
+#>                          Gran     CETYGO
+#> 201868590193_R01C01 0.2138328 0.05366570
+#> 201868590243_R02C01 0.6566618 0.03948246
+#> 201868590267_R01C01 0.6989066 0.03682644
+#> 201868590267_R05C01 0.5894684 0.04166677
+#> 201869680008_R01C01 0.1258030 0.04975795
+#> 201869680008_R03C01 0.6286077 0.04023896
 
 # Basic visualization of deconvolution output
 library(ggplot2)
@@ -193,7 +193,31 @@ ggplot(plt, aes(variable, value, color = variable)) +
     theme_bw() + 
     labs(x = "cell type", 
          y = "cell type proportion (%)", 
-         title = "Blood cell type proportion") 
+         title = "Blood cell type proportion") +
+    scale_color_manual(values = c(Bcell_cord = "#9C9EDEFF", 
+                                  Bnv = "#7375B5FF", 
+                                  Bmem = "#4A5584FF", 
+                                  Bcell = "#7375B5FF",
+                                  CD4T_cord = "#CEDB9CFF", 
+                                  CD4nv = "#B5CF6BFF", 
+                                  CD4mem = "#637939FF", 
+                                  Treg = "#8CA252FF", 
+                                  CD4T = "#B5CF6BFF",
+                                  CD8T_cord = "#E7CB94FF", 
+                                  CD8nv = "#E7BA52FF", 
+                                  CD8mem = "#8C6D31FF", 
+                                  CD8T = "#E7BA52FF",
+                                  NK_cord = "#7BBCB0FF", 
+                                  NK = "#3A7C89FF", 
+                                  Mono_cord = "#F3CBD3FF", 
+                                  Mono = "#707070",
+                                  Gran_cord = "#D39C83FF", 
+                                  Gran = "#A65461FF", 
+                                  Neu = "#A65461FF", 
+                                  Bas = "#7B4173FF",
+                                  Eos = "#A55194FF", 
+                                  nRBC = "#843C39FF")) +
+    theme(axis.text.x = element_text(angle = 45, vjust = 0.9, hjust = 1))
 ```
 
 <img src="man/figures/README-visualization-1.png" width="100%" />

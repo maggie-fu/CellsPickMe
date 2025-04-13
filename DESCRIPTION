@@ -1,11 +1,11 @@
 Package: CellsPickMe
 Title: Predict cell type proportion based on DNA methylation data
-Version: 0.0.0.9000
+Version: 0.1.0
 Authors@R: 
     person("Maggie", "Fu", , "maggie.fu@bcchr.ca", role = c("aut", "cre"),
            comment = c(ORCID = "YOUR-ORCID-ID"))
 Description: The package streamline cell type prediction process, from reference selection, machine-learning algorithm-based feature selection, to cell type prediction, and includes methods to assess prediction accuracy based on clustering and rmse calculation. 
-License: MIT + file LICENSE
+License: GPL (>= 3)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2

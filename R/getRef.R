@@ -15,7 +15,7 @@
 #' # Request the IDOL reference (2016) without normalization
 #' getRef(ref = "IDOL", normType = "None")
 
-getRef <- function(ref = c("Reinius", "IDOL", "IDOL_extended",
+getRef <- function(ref = c("Reinius", "IDOL", "Extended",
                            "UniBlood7", "UniBlood7",
                            "Cord", "DLPFC", "Middleton"),
                    normType = c("None", "Noob", "Funnorm", "Quantile")){

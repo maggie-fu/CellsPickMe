@@ -89,10 +89,10 @@ predictCT <- function(dataNormed, probes, method, conditions = NULL, removenRBC 
                                   betasBulkIN = YIN)
             })
             nMissingAll <- nrow(probes$coefs) - nrow(YIN)
-            nCGmissing <- apply(YIN, 2, function(x) {
-                sum(is.na(x)) + nMissingAll
-            })
-            out <- cbind(counts, CETYGO, nCGmissing)
+            # nCGmissing <- apply(YIN, 2, function(x) {
+            #     sum(is.na(x)) + nMissingAll
+            # })
+            out <- cbind(counts, CETYGO)
         }
     }
     return(out)

@@ -14,7 +14,8 @@ Imports:
     ExperimentHub,
     genefilter,
     IlluminaHumanMethylationEPICanno.ilm10b4.hg19,
-    inborutils,
+    inbo/inborutils,
+    inborutils (>= 0.4.0),
     limma,
     magrittr,
     MASS,
@@ -46,3 +47,5 @@ Depends:
     R (>= 2.10)
 LazyData: true
 URL: https://maggie-fu.github.io/CellsPickMe/
+Remotes:  
+    inbo/inborutils

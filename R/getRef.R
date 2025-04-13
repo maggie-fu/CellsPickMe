@@ -65,8 +65,8 @@ getRef <- function(ref = c("Reinius", "IDOL", "Extended",
     if(ref == "UniBlood7"){
         message("Downloading UniBlood7.rda to temp dir and calling it.\n")
         dir <- tempdir()
-        inborutils::download_zenodo("10.5281/zenodo.15200270",
-                                    path = dir)
+        curl_download("https://zenodo.org/api/records/15204839/files/UniBlood7.rda/content",
+                      paste0(dir, "/UniBlood7.rda"), quiet = FALSE)
         reference <- loadRData(paste0(dir, "/UniBlood7.rda"))
         cellTypes <- c("CD8T", "CD4T", "NK", "Bcell", "Mono", "Gran", "nRBC")
     }
@@ -74,8 +74,8 @@ getRef <- function(ref = c("Reinius", "IDOL", "Extended",
     if(ref == "UniBlood13"){
         message("Downloading UniBlood13.rda to temp dir and calling it.\n")
         dir <- tempdir()
-        inborutils::download_zenodo("10.5281/zenodo.15204842",
-                                    path = dir)
+        curl_download("https://zenodo.org/api/records/15204843/files/UniBlood13.rda/content",
+                      paste0(dir, "/UniBlood13.rda"), quiet = FALSE)
         reference <- loadRData(paste0(dir, "/UniBlood13.rda"))
         cellTypes <- c("Bmem", "Bnv", "CD8mem", "CD8nv",
                        "CD4mem", "CD4nv", "Treg",
@@ -85,8 +85,8 @@ getRef <- function(ref = c("Reinius", "IDOL", "Extended",
     if(ref == "UniBlood19"){
         message("Downloading UniBlood19.rda to temp dir and calling it.\n")
         dir <- tempdir()
-        inborutils::download_zenodo("10.5281/zenodo.15204848",
-                                    path = dir)
+        curl_download("https://zenodo.org/api/records/15204848/files/UniBlood19.rda/content",
+                      paste0(dir, "/UniBlood19.rda"), quiet = FALSE)
         reference <- loadRData(paste0(dir, "/UniBlood19.rda"))
         cellTypes <- c("Bcell_cord", "Bmem", "Bnv",
                        "CD8T_cord", "CD8mem", "CD8nv",

@@ -39,16 +39,16 @@
 #' comb_dat <- combData(dataset = test_dat, reference = ref_dat$reference,
 #' class = "rgset", normType = "None", cellTypes = ref_dat$cellTypes)
 #' # Pick probes with repeated cross validation with lasso and elastic net
-#' probes <- pickProbes(dataNormed = comb_dat, probeList = "Caret_CV",
-#' caretMods = c("lasso", "EL"), probeSelect = "any", p.val = 1,
+#' probes <- pickProbes(dataNormed = comb_dat, probeList = "Caret_LOOCV",
+#' caretMods = c("lasso", "EN"), probeSelect = "any", p.val = 1,
 #' min.delta.beta = 0, filterK = 1000, seed = 1)
 
 
 pickProbes <- function(dataNormed,
-                       probeList = c("Ttest", "Caret", "IDOL", "DHS"),
+                       probeList = c("Ttest", "Caret_CV", "Caret_LOOCV", "IDOL"),
                        probeSelect = c("any", "both"),
                        nProbes,
-                       caretMods = c("lasso", "EL", "BLR",
+                       caretMods = c("lasso", "EN", "BLR",
                                      "CART", "RF", "GBM",
                                      "GAnLDA", "GAnRF", "GAnNB",
                                      "GAnSVM", "GAnNN"),
@@ -73,10 +73,11 @@ pickProbes <- function(dataNormed,
         # Call the pickCompProbes2 function below to select the probes that
         # can best discern cell types and calculate weights
     } else if (probeList == "Caret_CV") {
+        if(is.null(probeSelect)) probeSelect <- "both"
         coefs <- pickCompProbesCaret(betas = dataNormed$ref.n,
                                      meta = dataNormed$refMeta,
                                      ct = dataNormed$cellTypes,
-                                     ps = "both",
+                                     ps = probeSelect,
                                      p.val = p.val,
                                      min.delta.beta = min.delta.beta,
                                      caretMods = caretMods,
@@ -85,10 +86,11 @@ pickProbes <- function(dataNormed,
                                      plot = plotRef,
                                      seed = seed)
     } else if (probeList == "Caret_LOOCV") {
+        if(is.null(probeSelect)) probeSelect <- "both"
         coefs <- pickCompProbesCaretLOOCV(betas = dataNormed$ref.n,
                                           meta = dataNormed$refMeta,
                                           ct = dataNormed$cellTypes,
-                                          ps = "both",
+                                          ps = probeSelect,
                                           p.val = p.val,
                                           min.delta.beta = min.delta.beta,
                                           caretMods = caretMods,

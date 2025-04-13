@@ -6,6 +6,14 @@ splitit <- function(x) {
 
 ##############################################################################################################
 
+# By ricardo on Stack Overflow
+loadRData <- function(fileName){
+    #loads an RData file, and returns it
+    load(fileName)
+    get(ls()[ls() != "fileName"])
+}
+
+##############################################################################################################
 
 pickCompProbes2 <- function(betas, meta, nP, ct, ps = c("any", "both"), trainingProbes = NULL, p.val = 1e-8, min.delta.beta = 0, plot) {
 

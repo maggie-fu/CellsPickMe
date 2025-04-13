@@ -158,8 +158,8 @@ The **CellsPickMe** package supports feature selection with either the tradition
 ```{r pickProbes, warnings = FALSE, message = FALSE}
 # Pick probes with T tests
 probes <- pickProbes(dataNormed = comb_dat, 
-                     probeList = "Ttest", #c("Ttest", "Caret_CV", "Caret_LOOCV", "IDOL", "DHS")
-                     probeSelect = "both", #c("both", "any", "pval")
+                     probeList = "Ttest", #c("Ttest", "Caret_CV", "Caret_LOOCV", "IDOL")
+                     probeSelect = "both", #c("both", "any")
                      nProbes = 100, # number of probes to pick for each cell type
                      p.val = 0.05,  # max pval
                      min.delta.beta = 0.05, # min delta beta
@@ -168,7 +168,7 @@ probes <- pickProbes(dataNormed = comb_dat,
 
 ### Set up server for parallelization - run the code if picking probes with Caret
 library(doParallel)
-cl <- makeCluster(10) # change as needed
+cl <- makeCluster(detectCores() - 1) # change as needed
 registerDoParallel(cl)
 
 # Pick probes with repeated cross validation with lasso and elastic net
@@ -182,8 +182,10 @@ probes <- pickProbes(dataNormed = comb_dat,
 
 # FilterK results used as input for feature selection
 head(probes$coefs$probeList$CD8T$tTestTopK)
+
 # Picked probes with EN and the estimated coefficients
 head(probes$coefs$probeCoefs$EN)
+
 # Picked probes with EN for each cell type and the cross validation performance 
 head(probes$coefs$probeList$Bcell$EN)
 ```
@@ -214,9 +216,8 @@ out <- predictCT(dataNormed = comb_dat,
 ### Examine the output
 
 ```{r visualization, warnings = FALSE, message = FALSE}
-# Estimated proportions based on IDOL reference, Noob normalization, lasso / EN feature selection, and constraint projection
+# Estimated proportions based on IDOL reference, Noob normalization, EN feature selection, and constraint projection
 # CETYOGO score column shows the CETYGO score for each sample
-head(out$lasso)
 head(out$EN)
 
 

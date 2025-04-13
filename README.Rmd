@@ -100,12 +100,8 @@ probes <- pickProbes(dataNormed = comb_dat,
                      plotRef = F, # plot heatmap?
                      verbose = F)
 
-# FilterK results used as input for feature selection
-head(probes$coefs$probeList$CD8T$tTestTopK)
 # Picked probes with RF and the estimated coefficients
 head(probes$coefs$probeCoefs$RF)
-# Picked probes with RF for each cell type and the cross validation performance 
-head(probes$coefs$probeList$CD8T$RF)
 ```
 
 ### Assess clustering stability
@@ -137,7 +133,6 @@ out <- predictCT(dataNormed = comb_dat,
 # Estimated proportions based on IDOL reference, Noob normalization, RF feature selection, and constraint projection
 # CETYOGO score column shows the CETYGO score for each sample
 head(out$RF)
-head(out$EN)
 
 # Basic visualization of deconvolution output
 library(ggplot2)

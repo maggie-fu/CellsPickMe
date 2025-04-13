@@ -46,14 +46,15 @@
 
 pickProbes <- function(dataNormed,
                        probeList = c("Ttest", "Caret_CV", "Caret_LOOCV", "IDOL"),
-                       probeSelect = c("any", "both"),
-                       nProbes,
+                       probeSelect = c("both", "any"),
+                       nProbes = 100,
+                       p.val = 0.05,
+                       min.delta.beta = 0,
                        caretMods = c("lasso", "EN", "BLR",
                                      "CART", "RF", "GBM",
                                      "GAnLDA", "GAnRF", "GAnNB",
                                      "GAnSVM", "GAnNN"),
-                       seed = 1, p.val = 0.05,
-                       min.delta.beta = 0,
+                       seed = 1,
                        filterK = 1000,
                        plotRef = TRUE,
                        verbose = TRUE) {
@@ -73,7 +74,7 @@ pickProbes <- function(dataNormed,
         # Call the pickCompProbes2 function below to select the probes that
         # can best discern cell types and calculate weights
     } else if (probeList == "Caret_CV") {
-        if(is.null(probeSelect)) probeSelect <- "both"
+        if(missing(probeSelect)) probeSelect <- "both"
         coefs <- pickCompProbesCaret(betas = dataNormed$ref.n,
                                      meta = dataNormed$refMeta,
                                      ct = dataNormed$cellTypes,
@@ -86,7 +87,7 @@ pickProbes <- function(dataNormed,
                                      plot = plotRef,
                                      seed = seed)
     } else if (probeList == "Caret_LOOCV") {
-        if(is.null(probeSelect)) probeSelect <- "both"
+        if(missing(probeSelect)) probeSelect <- "both"
         coefs <- pickCompProbesCaretLOOCV(betas = dataNormed$ref.n,
                                           meta = dataNormed$refMeta,
                                           ct = dataNormed$cellTypes,

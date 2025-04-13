@@ -27,13 +27,13 @@ combData <- function(dataset, reference, class = c("rgset", "betas"),
     if (!normType %in% c("Noob", "Funnorm", "Quantile", "Quantile.b", "None")) {
         stop("Please specify one of the available normalization methods")
     } else if (normType == "Funnorm") {
-        processMethod <- "minfi::preprocessFunnorm"
+        processMethod <- "preprocessFunnorm"
         if (class == "betas") stop("A RGChannelSet is required for functional normalization")
     } else if (normType == "Noob") {
-        processMethod <- "minfi::preprocessNoob"
+        processMethod <- "preprocessNoob"
         if (class == "betas") stop("A RGChannelSet or is required for Noob normalization")
     } else if (normType == "Quantile") {
-        processMethod <- "minfi::preprocessQuantile"
+        processMethod <- "preprocessQuantile"
         if (class == "betas") stop("A RGChannelSet is required for this quantile normalization method. If you only have betas, set normalization method to Quantile.b instead")
     } else if (normType == "Quantile.b") {
         if (class == "rgset") stop("Quantile.b is exclusively for beta matrix input. Use Quantile instead if you have an RGChannelSet")
@@ -41,7 +41,7 @@ combData <- function(dataset, reference, class = c("rgset", "betas"),
 
     sampCT <- rep("WBC", ncol(dataset))
     if (normType %in% c("Funnorm", "Noob", "Quantile")) {
-        processMethod <- get(processMethod)
+        processMethod <- get(processMethod, envir = getNamespace('minfi'))
     }
 
     ### Data normalization

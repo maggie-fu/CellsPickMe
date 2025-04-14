@@ -24,6 +24,14 @@ combData <- function(dataset, reference, class = c("rgset", "betas"),
                                    "CD8nv", "Eos", "Mono", "Neu", "NK", "Treg"),
                      verbose = TRUE) {
 
+    # Check array annotation files are available for minfi
+    requireNamespace(c("IlluminaHumanMethylation450kmanifest",
+                       "IlluminaHumanMethylationEPICmanifest",
+                       "IlluminaHumanMethylationEPICanno.ilm10b4.hg19",
+                       "IlluminaHumanMethylation450kanno.ilmn12.hg19"),
+                     quietly = TRUE)
+
+    # Match normalization functions
     if (!normType %in% c("Noob", "Funnorm", "Quantile", "Quantile.b", "None")) {
         stop("Please specify one of the available normalization methods")
     } else if (normType == "Funnorm") {
@@ -43,11 +51,6 @@ combData <- function(dataset, reference, class = c("rgset", "betas"),
     if (normType %in% c("Funnorm", "Noob", "Quantile")) {
         processMethod <- get(processMethod, envir = getNamespace('minfi'))
     }
-
-    get(IlluminaHumanMethylation450kmanifest, envir = getNamespace('IlluminaHumanMethylation450kmanifest'))
-    get(IlluminaHumanMethylationEPICmanifest, envir = getNamespace('IlluminaHumanMethylationEPICmanifest'))
-    get(IlluminaHumanMethylationEPICanno.ilm10b4.hg19, envir = getNamespace('IlluminaHumanMethylationEPICanno.ilm10b4.hg19'))
-    get(IlluminaHumanMethylation450kanno.ilmn12.hg19, envir = getNamespace('IlluminaHumanMethylation450kanno.ilmn12.hg19'))
 
     ### Data normalization
     if (verbose)

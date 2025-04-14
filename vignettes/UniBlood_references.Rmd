@@ -22,7 +22,7 @@ The UniBlood references, including UniBlood7, UniBlood13, and UniBlood19, were g
 **Table 1**. Cellular composition and dataset included for the three reference datasets we compiled in this study, UniBlood7, UniBlood13, and UniBlood19.
 
 |  |  |  |  |
-|------------------|------------------|------------------|------------------|
+|----|----|----|----|
 |  | UniBlood7 | UniBlood13 | UniBlood19 |
 | FlowSorted.Blood.450k (Reinius) | 🗸 |  |  |
 | FlowSorted.Blood.EPIC (IDOL) | 🗸 | only monocytes, neutrophils, and NK cells | only monocytes, neutrophils, and NK cells |

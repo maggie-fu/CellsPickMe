@@ -113,12 +113,12 @@ From the available list of reference datasets ("Reinius", "IDOL", "Extended", "C
 library(CellsPickMe)
 
 # Request the UniBlood19 reference with no normalization
-ref_dat <- getRef(ref = "UniBlood19", normType = "None")
+ref_dat <- getRef(ref = "IDOL", normType = "None")
 ```
 
 ### Normalize sample and reference datasets together
 
-Normalize user's sample and reference data sets together to reduce batch effect and improve prediction accuracy
+Normalize user's sample and reference data sets together to reduce batch effect and improve prediction accuracy. Option for `normType` includes "Noob", "Funnorm", "Quantile", "Quantile.b", "None", with the first 3 options being exclusively for RGChannelSet objects, and Quantile.b for beta matrix.
 
 ```{r combData, warnings = FALSE, message = FALSE}
 # Load example blood cell mixture, subsetted from the IDOL dataset (GSE110554)
@@ -127,9 +127,9 @@ test_dat <- CellsPickMe::IDOL_mixed_cells
 # Combine sample and reference data sets together, followed by normalization (if selected)
 comb_dat <- combData(dataset = test_dat, 
                      reference = ref_dat$reference, 
-                     class = "rgset", 
-                     normType = "Quantile", 
-                     cellTypes = ref_dat$cellTypes)
+                     cellTypes = ref_dat$cellTypes, 
+                     class = "rgset",               #c("rgset", "betas")
+                     normType = "None")             # c("Noob", "Funnorm", "Quantile", "Quantile.b", "None")
 ```
 
 ### Pick features that best distinguish cell type
@@ -213,7 +213,7 @@ out <- predictCT(dataNormed = comb_dat,
 ### Examine the output
 
 ```{r visualization, warnings = FALSE, message = FALSE}
-# Estimated proportions based on IDOL reference, Noob normalization, EN feature selection, and constraint projection
+# Estimated proportions based on IDOL reference, no normalization, EN feature selection, and constraint projection
 # CETYOGO score column shows the CETYGO score for each sample
 head(out$EN)
 

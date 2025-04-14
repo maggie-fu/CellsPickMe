@@ -18,10 +18,8 @@
 #' # Combine sample and reference data sets together, followed by normalization (if selected)
 #' comb_dat <- combData(dataset = test_dat, reference = ref_dat$reference, class = "rgset", normType = "None", cellTypes = ref_dat$cellTypes)
 
-combData <- function(dataset, reference, class = c("rgset", "betas"),
+combData <- function(dataset, reference, cellTypes, class = c("rgset", "betas"),
                      normType = c("Noob", "Funnorm", "Quantile", "Quantile.b", "None"),
-                     cellTypes = c("Bas", "Bmem", "Bnv", "CD4mem", "CD4nv", "CD8mem",
-                                   "CD8nv", "Eos", "Mono", "Neu", "NK", "Treg"),
                      verbose = TRUE) {
 
     # Check array annotation files are available for minfi

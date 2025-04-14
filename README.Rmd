@@ -43,23 +43,23 @@ From the available list of reference datasets ("Reinius", "IDOL", "Extended", "U
 library(CellsPickMe)
 
 # Request the IDOL reference (2016) with no normalization
-ref_dat <- getRef(ref = "IDOL", normType = "None")
+ref_dat <- getRef(ref = "UniBlood19", normType = "None")
 ```
 
 ### Normalize sample and reference datasets together
 
-Normalize user's sample and reference data sets together to reduce batch effect and improve prediction accuracy
+Normalize user's sample and reference data sets together to reduce batch effect and improve prediction accuracy. Option for `normType` includes "Noob", "Funnorm", "Quantile", "Quantile.b", "None", with the first 3 options being exclusively for RGChannelSet objects, and Quantile.b for beta matrix.
 
 ```{r combData, message = FALSE, warning = FALSE}
 # Load example blood cell mixture, subsetted from the IDOL dataset (GSE110554)
 test_dat <- CellsPickMe::IDOL_mixed_cells
- 
+    
 # Combine sample and reference data sets together, followed by normalization (if selected)
 comb_dat <- combData(dataset = test_dat, 
-                     reference = ref_dat$reference, 
-                     class = "rgset", 
-                     normType = "Noob", 
-                     cellTypes = ref_dat$cellTypes)
+                     reference = ref_dat$reference,
+                     cellTypes = ref_dat$cellTypes, 
+                     class = "rgset",               #c("rgset", "betas")
+                     normType = "Quantile")         # c("Noob", "Funnorm", "Quantile", "Quantile.b", "None")
 ```
 
 ### Pick features that best distinguish cell type
@@ -130,7 +130,7 @@ out <- predictCT(dataNormed = comb_dat,
 ### Examine output
 
 ```{r visualization, message = FALSE, warning = FALSE}
-# Estimated proportions based on IDOL reference, Noob normalization, RF feature selection, and constraint projection
+# Estimated proportions based on UniBlood19 reference, Quantile normalization, RF feature selection, and constraint projection
 # CETYOGO score column shows the CETYGO score for each sample
 head(out$RF)
 
@@ -139,7 +139,7 @@ library(ggplot2)
 library(dplyr)
 library(reshape2)
 
-plt <- out$RF[, c("CD8T", "CD4T", "NK", "Bcell", "Mono", "Gran")] %>%
+plt <- out$RF[, ref_dat$cellTypes] %>%
     as.data.frame(.) %>% 
     reshape2::melt()
 ggplot(plt, aes(variable, value, color = variable)) + 

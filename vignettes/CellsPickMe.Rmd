@@ -74,7 +74,7 @@ The **CellsPickMe** package takes DNAme data generated from Illumina microarray 
 
 The figure below focused on our optimization of the deconvolution pipeline in the blood tissue. The four main steps of cellular deconvolution are reference selection, data normalization, feature selection, and regression. The function that calls each of the step is bolded on the left, and the detail of each function is described in the [Usage] section.
 
-```{r label, out.width = "900px", out.height = "800px", fig.cap = "CellsPickMe Pipeline", echo = FALSE}
+```{r label, out.width = "900px", out.height = "800px", fig.cap = "CellsPickMe Pipeline, created with BioRender.com", echo = FALSE}
 knitr::include_graphics("CellsPickMe_pipeline.pdf", dpi = 600) 
 ```
 

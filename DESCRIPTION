@@ -1,6 +1,6 @@
 Package: CellsPickMe
 Title: Predict cell type proportion based on DNA methylation data
-Version: 0.1.0
+Version: 1.0.0
 Authors@R: 
     person("Maggie", "Fu", , "maggie.fu@bcchr.ca", role = c("aut", "cre"),
            comment = c(ORCID = "YOUR-ORCID-ID"))

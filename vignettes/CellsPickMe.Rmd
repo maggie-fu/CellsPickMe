@@ -109,7 +109,7 @@ The **CellsPickMe** package takes DNA methylation data generated from Illumina m
 
 From the available list of reference datasets ("Reinius", "IDOL", "Extended", "Cord", "UniBlood7", "UniBlood13", "UniBlood19", "DLPFC", and "Middleton"), select one that is appropriate for your sample (based on tissue and sample age)
 
-```{r getRef, warnings = FALSE, message = FALSE}
+```{r getRef, warnings = FALSE, message = FALSE, eval = FALSE}
 library(CellsPickMe)
 
 # Request the UniBlood19 reference with no normalization
@@ -120,7 +120,7 @@ ref_dat <- getRef(ref = "IDOL", normType = "None")
 
 Normalize user's sample and reference data sets together to reduce batch effect and improve prediction accuracy. Option for `normType` includes "Noob", "Funnorm", "Quantile", "Quantile.b", "None", with the first 3 options being exclusively for RGChannelSet objects, and Quantile.b for beta matrix.
 
-```{r combData, warnings = FALSE, message = FALSE}
+```{r combData, warnings = FALSE, message = FALSE, eval = FALSE}
 # Load example blood cell mixture, subsetted from the IDOL dataset (GSE110554)
 test_dat <- CellsPickMe::IDOL_mixed_cells
  
@@ -152,7 +152,7 @@ The **CellsPickMe** package supports feature selection with either the tradition
 | gradient boosted machine                        | GBM                             | GBM is another ensemble-based method that can perform feature selection by iteratively building trees that focus on predicting the errors of previous trees. In this process, GBM can identify important features that improve the model's performance.                                                                                                                                                                                                                                                                                                |
 +-------------------------------------------------+---------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 
-```{r pickProbes, warnings = FALSE, message = FALSE}
+```{r pickProbes, warnings = FALSE, message = FALSE, eval = FALSE}
 # Pick probes with T tests
 probes <- pickProbes(dataNormed = comb_dat, 
                      probeList = "Ttest", #c("Ttest", "Caret_CV", "Caret_LOOCV", "IDOL")
@@ -191,7 +191,7 @@ head(probes$coefs$probeList$CD8mem$EN$coefs)
 
 To further evaluate the performance of the selected probes, pvClust can be applied to assess whether the picked probes can be used to generate the correct cluster (cell type labeling) in reference data
 
-```{r pvclust, warnings = FALSE, message = FALSE}
+```{r pvclust, warnings = FALSE, message = FALSE, eval = FALSE}
 clustAU <- identClust(dataNormed = comb_dat,
                       probes = probes,
                       parallel = TRUE)
@@ -201,7 +201,7 @@ clustAU <- identClust(dataNormed = comb_dat,
 
 Finally, the selected features are used to estimate cell type proportions in the sample data set. We also incorporate the CETYGO score (see Reference) to estimate prediction performance even in the absence of a validation cohort / ground truth cell count.
 
-```{r predictCT, warnings = FALSE, message = FALSE}
+```{r predictCT, warnings = FALSE, message = FALSE, eval = FALSE}
 out <- predictCT(dataNormed = comb_dat, 
                  probes = probes, 
                  method = "CP",  #c("CP", "RPC", "SVR")
@@ -212,7 +212,7 @@ out <- predictCT(dataNormed = comb_dat,
 
 ### Examine the output
 
-```{r visualization, warnings = FALSE, message = FALSE}
+```{r visualization, warnings = FALSE, message = FALSE, eval = FALSE}
 # Estimated proportions based on IDOL reference, no normalization, EN feature selection, and constraint projection
 # CETYOGO score column shows the CETYGO score for each sample
 head(out$EN)

@@ -44,6 +44,11 @@ combData <- function(dataset, reference, class = c("rgset", "betas"),
         processMethod <- get(processMethod, envir = getNamespace('minfi'))
     }
 
+    get(IlluminaHumanMethylation450kmanifest, envir = getNamespace('IlluminaHumanMethylation450kmanifest'))
+    get(IlluminaHumanMethylationEPICmanifest, envir = getNamespace('IlluminaHumanMethylationEPICmanifest'))
+    get(IlluminaHumanMethylationEPICanno.ilm10b4.hg19, envir = getNamespace('IlluminaHumanMethylationEPICanno.ilm10b4.hg19'))
+    get(IlluminaHumanMethylation450kanno.ilmn12.hg19, envir = getNamespace('IlluminaHumanMethylation450kanno.ilmn12.hg19'))
+
     ### Data normalization
     if (verbose)
         cat("Combining Data with Flow Sorted Data and Normalizing.\n")

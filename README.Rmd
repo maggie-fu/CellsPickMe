@@ -19,6 +19,10 @@ knitr::opts_chunk$set(
 
 <!-- badges: end -->
 
+```{r logo, echo = FALSE, out.height = "25%", out.width = "25%"}
+knitr::include_graphics("logo2.png")
+```
+
 The **CellsPickMe** package takes DNA methylation (DNAme) data generated from Illumina microarray of a heterogeneous tissue and predict its cellular composition based on cell types available in the reference profiles. *Notably, for each population of **cells**, the package "**picks**" DNA**me** features that best predict cellular identities with machine learning algorithms to improve deconvolution performance.* Currently, the algorithm is compatible for peripheral blood, cord blood, saliva, and brain (neuron vs non-neuron).
 
 ## Installation

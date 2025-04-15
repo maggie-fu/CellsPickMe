@@ -6,6 +6,8 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
+<img src="logo2.png" width="25%" height="25%" />
+
 The **CellsPickMe** package takes DNA methylation (DNAme) data generated
 from Illumina microarray of a heterogeneous tissue and predict its
 cellular composition based on cell types available in the reference

@@ -17,6 +17,8 @@ knitr::opts_chunk$set(
 
 <!-- badges: start -->
 
+[![](https://zenodo.org/badge/DOI/10.5281/zenodo.15225880.svg)](https://doi.org/10.5281/zenodo.15225880)
+
 <!-- badges: end -->
 
 ```{r logo, echo = FALSE, out.height = "25%", out.width = "25%"}

@@ -95,33 +95,82 @@ also vital in epigenome-wide association studies to accurately evaluate
 the signals associated with the variables of interest.</p>
 <p>The <strong>CellsPickMe</strong> package takes DNAme data generated
 from Illumina microarray and predict its cellular composition based on
-cell types available in the reference profiles. Currently, the algorithm
-is compatible for peripheral blood, cord blood, saliva, and brain
-(neuron vs non-neuron). The table below illustrate the reference
-datasets available in the <strong>CellsPickMe</strong> package for
-deconvolution. We curated the UniBlood references (7, 13, and 19) to
-address the current challenge in deconvoluting longitudinal and
-pediatric blood samples. Refer to the [UniBlood Reference
-Creation][UniBlood Reference Creation] article for details of the
-UniBlood references.</p>
+cell types available in the reference profiles. <em>Notably, for each
+population of <strong>cells</strong>, the package
+“<strong>picks</strong>” DNA<strong>me</strong> features that best
+predict cellular identities with machine learning algorithms to improve
+deconvolution performance.</em> Currently, the algorithm is compatible
+for peripheral blood, cord blood, saliva, and brain (neuron vs
+non-neuron). The table below illustrate the reference datasets available
+in the <strong>CellsPickMe</strong> package for deconvolution. We
+curated the UniBlood references (7, 13, and 19) to address the current
+challenge in deconvoluting longitudinal and pediatric blood samples.
+Refer to the [UniBlood Reference Creation][UniBlood Reference Creation]
+article for details of the UniBlood references.</p>
 <div class="section level5">
 <h5 id="available-reference-datasets-for-tissues-in-cellspickme">Available reference datasets for tissues in CellsPickMe<a class="anchor" aria-label="anchor" href="#available-reference-datasets-for-tissues-in-cellspickme"></a>
 </h5>
 <table style="width:99%;" class="table">
 <colgroup>
 <col width="9%">
-<col width="6%">
+<col width="7%">
 <col width="8%">
-<col width="74%">
+<col width="73%">
 </colgroup>
 <thead><tr class="header">
-<th>Tissue</th>
-<th>Reference dataset</th>
-<th>ID for the <code><a href="../reference/getRef.html">getRef()</a></code> function</th>
+<th><div style="width:150px">
+<p>Tissue</p>
+</div></th>
+<th><div style="width:100px">
+<p>Reference dataset</p>
+</div></th>
+<th><div style="width:100px">
+<p>ID for the <code><a href="../reference/getRef.html">getRef()</a></code> function</p>
+</div></th>
 <th>DOI / Bioconductor Package</th>
 </tr></thead>
 <tbody>
 <tr class="odd">
+<td>Cord and adult peripheral blood</td>
+<td>UniBlood7</td>
+<td>UniBlood7</td>
+<td>Available soon</td>
+</tr>
+<tr class="even">
+<td>Cord and adult peripheral blood</td>
+<td>UniBlood13</td>
+<td>UniBlood13</td>
+<td>Available soon</td>
+</tr>
+<tr class="odd">
+<td>Cord and adult peripheral blood</td>
+<td>UniBlood19</td>
+<td>UniBlood19</td>
+<td>Available soon</td>
+</tr>
+<tr class="even">
+<td>Adult peripheral blood</td>
+<td>IDOL extended (2022)</td>
+<td>Extended</td>
+<td>
+<p>LA Salas et al. (2022) Enhanced cell deconvolution of peripheral
+blood using DNA methylation for high-resolution immune profiling.
+<em>Nat Commun</em>. 13, 761. doi: <a href="https://doi.org/10.1038/s41467-021-27864-7" class="external-link">10.1038/s41467-021-27864-7</a></p>
+<p><a href="10.5281/zenodo.5256297"><code>FlowSorted.BloodExtended.EPIC</code></a></p>
+</td>
+</tr>
+<tr class="odd">
+<td>Adult peripheral blood</td>
+<td>IDOL (2016)</td>
+<td>IDOL</td>
+<td>
+<p>DC Koestler et al. (2016). Improving cell mixture deconvolution
+by identifying optimal DNA methylation libraries (IDOL). <em>BMC
+bioinformatics</em>. 17, 120. doi: <a href="https://doi.org/10.1186/s12859-016-0943-7" class="external-link">10.1186/s12859-016-0943-7</a></p>
+<p><a href="10.18129/B9.bioc.FlowSorted.Blood.EPIC"><code>FlowSorted.Blood.EPIC</code></a></p>
+</td>
+</tr>
+<tr class="even">
 <td>Adult peripheral blood</td>
 <td>Reinius (2012)</td>
 <td>Reinius</td>
@@ -130,35 +179,10 @@ UniBlood references.</p>
 purified human blood cells: implications for cell lineage and studies on
 disease susceptibility. <em>PloS one</em>. <em>7</em>(7), e41361. doi:
 <a href="https://doi.org/10.1371/journal.pone.0041361" class="external-link">10.1371/journal.pone.0041361</a></p>
-<pre><code><span><span class="va">FlowSorted.Blood.450k</span></span></code></pre>
-<p><a href="https://doi.org/doi:10.18129/B9.bioc.FlowSorted.Blood.450k" title="DOI for use in publications, etc., will always redirect to current release version (or devel if package is not in release yet)." class="external-link">10.18129/B9.bioc.FlowSorted.Blood.450k</a></p>
-</td>
-</tr>
-<tr class="even">
-<td>Adult peripheral blood</td>
-<td>IDOL (2016)</td>
-<td>IDOL</td>
-<td>
-<p>DC Koestler et al. (2016). Improving cell mixture deconvolution
-by identifying optimal DNA methylation libraries (IDOL). <em>BMC
-bioinformatics</em>. 17, 120. doi: <a href="https://doi.org/10.1186/s12859-016-0943-7" class="external-link">10.1186/s12859-016-0943-7</a></p>
-<pre><code><span><span class="va">FlowSorted.Blood.EPIC</span></span></code></pre>
-<p><a href="https://doi.org/doi:10.18129/B9.bioc.FlowSorted.Blood.EPIC" title="DOI for use in publications, etc., will always redirect to current release version (or devel if package is not in release yet)." class="external-link">10.18129/B9.bioc.FlowSorted.Blood.EPIC</a></p>
+<p><a href="10.18129/B9.bioc.FlowSorted.Blood.450k"><code>FlowSorted.Blood.450k</code></a></p>
 </td>
 </tr>
 <tr class="odd">
-<td>Adult peripheral blood</td>
-<td>IDOL extended (2022)</td>
-<td>Extended</td>
-<td>
-<p>LA Salas et al. (2022) Enhanced cell deconvolution of peripheral
-blood using DNA methylation for high-resolution immune profiling.
-<em>Nat Commun</em>. 13, 761. doi: <a href="https://doi.org/10.1038/s41467-021-27864-7" class="external-link">10.1038/s41467-021-27864-7</a></p>
-<pre><code><span><span class="va">FlowSorted.BloodExtended.EPIC</span></span></code></pre>
-<p><a href="https://doi.org/10.5281/zenodo.5256298" class="external-link">10.5281/zenodo.5256297</a></p>
-</td>
-</tr>
-<tr class="even">
 <td>Cord blood</td>
 <td>Cord (2018)</td>
 <td>Cord</td>
@@ -166,27 +190,8 @@ blood using DNA methylation for high-resolution immune profiling.
 <p>K Gervin et al. (2019). Systematic evaluation and validation of
 reference and library selection methods for deconvolution of cord blood
 DNA methylation data. <em>Clinical epigenetics</em>. 11, 1-15. doi: <a href="https://doi.org/10.1186/s13148-019-0717-y" class="external-link">10.1186/s13148-019-0717-y</a></p>
-<pre><code><span><span class="va">FlowSorted.CordBlood.450k</span></span></code></pre>
-<p><a href="https://doi.org/doi:10.18129/B9.bioc.FlowSorted.CordBlood.450k" title="DOI for use in publications, etc., will always redirect to current release version (or devel if package is not in release yet)." class="external-link">10.18129/B9.bioc.FlowSorted.CordBlood.450k</a></p>
+<p><a href="10.18129/B9.bioc.FlowSorted.CordBlood.450k"><code>FlowSorted.CordBlood.450k</code></a></p>
 </td>
-</tr>
-<tr class="odd">
-<td>Cord and adult peripheral blood</td>
-<td>UniBlood7</td>
-<td>UniBlood7</td>
-<td>Available soon</td>
-</tr>
-<tr class="even">
-<td>Cord and adult peripheral blood</td>
-<td>UniBlood13</td>
-<td>UniBlood13</td>
-<td>Available soon</td>
-</tr>
-<tr class="odd">
-<td>Cord and adult peripheral blood</td>
-<td>UniBlood19</td>
-<td>UniBlood19</td>
-<td>Available soon</td>
 </tr>
 <tr class="even">
 <td>Saliva</td>
@@ -196,8 +201,7 @@ DNA methylation data. <em>Clinical epigenetics</em>. 11, 1-15. doi: <a href="htt
 <p>LY Middleton et al. (2022). Saliva cell type DNA methylation
 reference panel for epidemiological studies in children.
 <em>Epigenetics</em>, <em>17</em>(2), 161-177. doi: <a href="https://doi.org/10.1371/journal.pone.0041361" class="external-link">10.1371/journal.pone.0041361</a></p>
-<pre><code><span><span class="va">BeadSorted.Saliva.EPIC</span></span></code></pre>
-<p><a href="https://doi.org/doi:10.18129/B9.bioc.BeadSorted.Saliva.EPIC" title="DOI for use in publications, etc., will always redirect to current release version (or devel if package is not in release yet)." class="external-link">10.18129/B9.bioc.BeadSorted.Saliva.EPIC</a></p>
+<p><a href="10.18129/B9.bioc.BeadSorted.Saliva.EPIC"><code>BeadSorted.Saliva.EPIC</code></a></p>
 </td>
 </tr>
 <tr class="odd">
@@ -209,8 +213,7 @@ reference panel for epidemiological studies in children.
 the correction of brain cellular heterogeneity bias and its application
 to age, brain region and major depression. <em>Epigenetics</em>,
 <em>8</em>(3), 290-302. doi: <a href="https://doi.org/10.4161/epi.23924" class="external-link">10.4161/epi.23924</a></p>
-<pre><code><span><span class="va">FlowSorted.DLPFC.450k</span></span></code></pre>
-<p><a href="https://doi.org/doi:10.18129/B9.bioc.FlowSorted.DLPFC.450k" title="DOI for use in publications, etc., will always redirect to current release version (or devel if package is not in release yet)." class="external-link">10.18129/B9.bioc.FlowSorted.DLPFC.450k</a></p>
+<p><a href="10.18129/B9.bioc.FlowSorted.DLPFC.450k"><code>FlowSorted.DLPFC.450k</code></a></p>
 </td>
 </tr>
 </tbody>
@@ -222,7 +225,7 @@ selection, and regression. The function that calls each of the step is
 bolded on the left, and the detail of each function is described in the
 <a href="#usage">Usage</a> section.</p>
 <div class="figure">
-<embed src="CellsPickMe_pipeline.pdf" title="CellsPickMe Pipeline, created with BioRender.com" width="900px" height="800px" type="application/pdf"></embed><p class="caption">
+<embed src="CellsPickMe_pipeline.pdf" title="CellsPickMe Pipeline, created with BioRender.com" width="900px" height="850px" type="application/pdf"></embed><p class="caption">
 CellsPickMe Pipeline, created with BioRender.com
 </p>
 </div>
@@ -268,7 +271,7 @@ the pData)</p>
 <div class="section level3">
 <h3 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h3>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://devtools.r-lib.org/" class="external-link">devtools</a></span><span class="op">)</span></span>
 <span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"maggie-fu/CellsPickMe"</span><span class="op">)</span></span></code></pre></div>
 </div>
@@ -287,7 +290,7 @@ brain (neuron vs non-neuron).</p>
 “Extended”, “Cord”, “UniBlood7”, “UniBlood13”, “UniBlood19”, “DLPFC”,
 and “Middleton”), select one that is appropriate for your sample (based
 on tissue and sample age)</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://maggie-fu.github.io/CellsPickMe/">CellsPickMe</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Request the UniBlood19 reference with no normalization</span></span>
@@ -301,7 +304,7 @@ batch effect and improve prediction accuracy. Option for
 <code>normType</code> includes “Noob”, “Funnorm”, “Quantile”,
 “Quantile.b”, “None”, with the first 3 options being exclusively for
 RGChannelSet objects, and Quantile.b for beta matrix.</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Load example blood cell mixture, subsetted from the IDOL dataset (GSE110554)</span></span>
 <span><span class="va">test_dat</span> <span class="op">&lt;-</span> <span class="fu">CellsPickMe</span><span class="fu">::</span><span class="va"><a href="../reference/IDOL_mixed_cells.html">IDOL_mixed_cells</a></span></span>
 <span> </span>
@@ -326,62 +329,68 @@ of features that are highly predictive of cell types.</p>
 <col width="88%">
 </colgroup>
 <thead><tr class="header">
-<th>Method</th>
-<th>ID for the <code>caretMods</code> argument</th>
-<th>Description</th>
+<th><div style="width:100px">
+<p>Method</p>
+</div></th>
+<th align="center"><div style="width:100px">
+<p>ID for the <code>caretMods</code> argument</p>
+</div></th>
+<th align="center">Description</th>
 </tr></thead>
 <tbody>
 <tr class="odd">
 <td>LASSO</td>
-<td>lasso</td>
-<td>Use L1 regularization to optimize shrinkage of coefficients
-uncorrelated with outcome of interest.</td>
+<td align="center">lasso</td>
+<td align="center">Use L1 regularization to optimize shrinkage of
+coefficients uncorrelated with outcome of interest.</td>
 </tr>
 <tr class="even">
 <td>elastic net</td>
-<td>EN</td>
-<td>Elastic Net is a linear regression-based method that can perform
-feature selection by using L1 and L2 regularization.</td>
+<td align="center">EN</td>
+<td align="center">Elastic Net is a linear regression-based method that
+can perform feature selection by using L1 and L2 regularization.</td>
 </tr>
 <tr class="odd">
 <td>random forest</td>
-<td>RF</td>
-<td>Random Forest is a decision tree-based ensemble method that can
-perform feature selection by evaluating the importance of each feature
-in the model. The Gini importance or Mean Decrease Impurity (MDI) are
-two ways to calculate feature importance in Random Forest.</td>
+<td align="center">RF</td>
+<td align="center">Random Forest is a decision tree-based ensemble
+method that can perform feature selection by evaluating the importance
+of each feature in the model. The Gini importance or Mean Decrease
+Impurity (MDI) are two ways to calculate feature importance in Random
+Forest.</td>
 </tr>
 <tr class="even">
 <td>boosted logistic regression</td>
-<td>BLR</td>
-<td>Boosted logistic regression is a machine learning algorithm that
-combines logistic regression with boosting, a technique for iteratively
-improving the performance of weak learners. # In boosted logistic
-regression, a weak logistic regression model is trained on the data, and
-then additional weak logistic regression models are trained to correct
-the errors of the previous models. Each subsequent model focuses more on
-the data points that were misclassified by the previous models, thus
-improving the overall accuracy of the model.</td>
+<td align="center">BLR</td>
+<td align="center">Boosted logistic regression is a machine learning
+algorithm that combines logistic regression with boosting, a technique
+for iteratively improving the performance of weak learners. # In boosted
+logistic regression, a weak logistic regression model is trained on the
+data, and then additional weak logistic regression models are trained to
+correct the errors of the previous models. Each subsequent model focuses
+more on the data points that were misclassified by the previous models,
+thus improving the overall accuracy of the model.</td>
 </tr>
 <tr class="odd">
 <td>classification and regression tree</td>
-<td>CART</td>
-<td>Decision Trees can perform feature selection by evaluating the
-information gain or Gini impurity of each feature when deciding how to
-split the data. The important features are those that lead to the
-highest reduction in impurity or the highest information gain.</td>
+<td align="center">CART</td>
+<td align="center">Decision Trees can perform feature selection by
+evaluating the information gain or Gini impurity of each feature when
+deciding how to split the data. The important features are those that
+lead to the highest reduction in impurity or the highest information
+gain.</td>
 </tr>
 <tr class="even">
 <td>gradient boosted machine</td>
-<td>GBM</td>
-<td>GBM is another ensemble-based method that can perform feature
-selection by iteratively building trees that focus on predicting the
-errors of previous trees. In this process, GBM can identify important
-features that improve the model’s performance.</td>
+<td align="center">GBM</td>
+<td align="center">GBM is another ensemble-based method that can perform
+feature selection by iteratively building trees that focus on predicting
+the errors of previous trees. In this process, GBM can identify
+important features that improve the model’s performance.</td>
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Pick probes with T tests</span></span>
 <span><span class="va">probes</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pickProbes.html">pickProbes</a></span><span class="op">(</span>dataNormed <span class="op">=</span> <span class="va">comb_dat</span>, </span>
 <span>                     probeList <span class="op">=</span> <span class="st">"Ttest"</span>, <span class="co">#c("Ttest", "Caret_CV", "Caret_LOOCV", "IDOL")</span></span>
@@ -421,7 +430,7 @@ features that improve the model’s performance.</td>
 <p>To further evaluate the performance of the selected probes, pvClust
 can be applied to assess whether the picked probes can be used to
 generate the correct cluster (cell type labeling) in reference data</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">clustAU</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/identClust.html">identClust</a></span><span class="op">(</span>dataNormed <span class="op">=</span> <span class="va">comb_dat</span>,</span>
 <span>                      probes <span class="op">=</span> <span class="va">probes</span>,</span>
 <span>                      parallel <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
@@ -433,7 +442,7 @@ generate the correct cluster (cell type labeling) in reference data</p>
 proportions in the sample data set. We also incorporate the CETYGO score
 (see Reference) to estimate prediction performance even in the absence
 of a validation cohort / ground truth cell count.</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">out</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/predictCT.html">predictCT</a></span><span class="op">(</span>dataNormed <span class="op">=</span> <span class="va">comb_dat</span>, </span>
 <span>                 probes <span class="op">=</span> <span class="va">probes</span>, </span>
 <span>                 method <span class="op">=</span> <span class="st">"CP"</span>,  <span class="co">#c("CP", "RPC", "SVR")</span></span>

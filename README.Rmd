@@ -19,7 +19,7 @@ knitr::opts_chunk$set(
 
 <!-- badges: end -->
 
-**CellsPickMe** is a streamlined R package for cell type proportion prediction in a heterogeneous tissue (i.e. deconvolution) based on DNA methylation (DNAme) data. As cell identity is crucially linked to cell function and DNAme profiles, estimation of cell type proportion is instrumental to understanding major factors driving DNAme variability. Accounting for inter-individual cellular heterogeneity is also vital in epigenome-wide association studies to accurately evaluate the signals associated with the variables of interest.
+The **CellsPickMe** package takes DNA methylation (DNAme) data generated from Illumina microarray of a heterogeneous tissue and predict its cellular composition based on cell types available in the reference profiles. *Notably, for each population of **cells**, the package "**picks**" DNA**me** features that best predict cellular identities with machine learning algorithms to improve deconvolution performance.* Currently, the algorithm is compatible for peripheral blood, cord blood, saliva, and brain (neuron vs non-neuron).
 
 ## Installation
 
@@ -33,11 +33,11 @@ devtools::install_github("maggie-fu/CellsPickMe")
 
 ## Usage
 
-The **CellsPickMe** package takes DNA methylation data generated from Illumina microarray and predict its cellular composition based on cell types available in the reference profiles. Currently, the algorithm is compatible for peripheral blood, cord blood, saliva, and brain (neuron vs non-neuron).
+Reference-based cell type deconvolution includes four steps: reference dataset selection, data normalization, feature selection, and cell composition regression.
 
-### Obtain reference dataset
+### 1. Obtain reference dataset
 
-From the available list of reference datasets ("Reinius", "IDOL", "Extended", "UniBlood7", "UniBlood13", "UniBlood19", "Cord", "DLPFC", and "Middleton"), select one that is appropriate for your sample (based on tissue and sample age) For more detail regarding the references, check out the [Get Started](maggie-fu.github.io/CellsPickMe/) and UniBlood Reference Generation page
+From the available list of reference datasets ("Reinius", "IDOL", "Extended", "UniBlood7", "UniBlood13", "UniBlood19", "Cord", "DLPFC", and "Middleton"), select one that is appropriate for your sample (based on tissue and sample age) For more detail regarding the references, check out the [vignette](https://maggie-fu.github.io/CellsPickMe/articles/CellsPickMe.html) and [UniBlood Reference Generation](https://maggie-fu.github.io/CellsPickMe/articles/UniBlood_references.html) page
 
 ```{r getRef, message = FALSE, warning = FALSE}
 library(CellsPickMe)
@@ -46,7 +46,7 @@ library(CellsPickMe)
 ref_dat <- getRef(ref = "UniBlood19", normType = "None")
 ```
 
-### Normalize sample and reference datasets together
+### 2. Normalize sample and reference datasets together
 
 Normalize user's sample and reference data sets together to reduce batch effect and improve prediction accuracy. Option for `normType` includes "Noob", "Funnorm", "Quantile", "Quantile.b", "None", with the first 3 options being exclusively for RGChannelSet objects, and Quantile.b for beta matrix.
 
@@ -62,7 +62,7 @@ comb_dat <- combData(dataset = test_dat,
                      normType = "Quantile")         # c("Noob", "Funnorm", "Quantile", "Quantile.b", "None")
 ```
 
-### Pick features that best distinguish cell type
+### 3. Pick features that best distinguish cell type
 
 The **CellsPickMe** package supports feature selection with either the traditional T-test, or with machine-learning-based methods such as elastic net and random forest to obtain a curated list of features that are highly predictive of cell types
 
@@ -104,7 +104,7 @@ probes <- pickProbes(dataNormed = comb_dat,
 head(probes$coefs$probeCoefs$RF)
 ```
 
-### Assess clustering stability
+#### Assess clustering stability
 
 To further evaluate the performance of the selected probes, pvClust can be applied to assess whether the picked probes can be used to generate the correct cluster (cell type labeling) in reference data
 
@@ -114,7 +114,7 @@ clustAU <- identClust(dataNormed = comb_dat,
                       parallel = TRUE)
 ```
 
-### Estimate cell type proportion
+### 4. Estimate cell type proportion
 
 Finally, the selected features are used to estimate cell type proportions in the sample data set. We also incorporate the CETYGO score (see Reference) to estimate prediction performance even in the absence of a validation cohort / ground truth cell count.
 

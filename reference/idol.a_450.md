@@ -1,0 +1,24 @@
+# IDOL probes for 450k array - adult blood
+
+CpG names of probes selected by IDOL, for 450K DNAm microarray
+
+## Usage
+
+``` r
+idol.a_450
+```
+
+## Format
+
+### 
+
+A vector of characters of length 350 The data is obtained from a
+publication by Salas et al. Please cite the following if using this
+data. Salas LA, Koestler DC, Butler RA, Hansen HM et al. An optimized
+library for reference-based deconvolution of whole-blood biospecimens
+assayed using the Illumina HumanMethylationEPIC BeadArray. Genome Biol
+2018 May 29;19(1):64. PMID: 29843789
+
+## Source
+
+<https://pubmed.ncbi.nlm.nih.gov/29843789/>

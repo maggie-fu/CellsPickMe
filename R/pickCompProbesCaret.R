@@ -32,7 +32,7 @@ pickCompProbesCaret <- function(betas, meta, ct, ps,
     pd$cellType <- factor(pd$cellType, levels = ct) # make cell type a factor
 
     ## Find the probes with significant different methylation status across cell types
-    tIndexes <- splitit(pd$cellType)
+    tIndexes <- .splitit(pd$cellType)
     tIndexes <- tIndexes[lapply(tIndexes, length) > 0]
 
     ## set seeds for reproducibility

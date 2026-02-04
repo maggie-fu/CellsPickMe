@@ -34,15 +34,22 @@ combData <- function(dataset, reference, cellTypes, class = c("rgset", "betas"),
         stop("Please specify one of the available normalization methods")
     } else if (normType == "Funnorm") {
         processMethod <- "preprocessFunnorm"
-        if (class == "betas") stop("A RGChannelSet is required for functional normalization")
+        if (class == "betas") stop("A RGChannelSet is required for functional
+                                   normalization")
     } else if (normType == "Noob") {
         processMethod <- "preprocessNoob"
-        if (class == "betas") stop("A RGChannelSet or is required for Noob normalization")
+        if (class == "betas") stop("A RGChannelSet or is required for Noob
+                                   normalization")
     } else if (normType == "Quantile") {
         processMethod <- "preprocessQuantile"
-        if (class == "betas") stop("A RGChannelSet is required for this quantile normalization method. If you only have betas, set normalization method to Quantile.b instead")
+        if (class == "betas") stop("A RGChannelSet is required for this quantile
+                                   normalization method. If you only have
+                                   betas, set normalization method to Quantile.b
+                                   instead")
     } else if (normType == "Quantile.b") {
-        if (class == "rgset") stop("Quantile.b is exclusively for beta matrix input. Use Quantile instead if you have an RGChannelSet")
+        if (class == "rgset") stop("Quantile.b is exclusively for beta matrix
+                                   input. Use Quantile instead if you have an
+                                   RGChannelSet")
     }
 
     sampCT <- rep("WBC", ncol(dataset))
@@ -62,7 +69,10 @@ combData <- function(dataset, reference, cellTypes, class = c("rgset", "betas"),
         # }
         if (class(reference) == "MethyLumiSet"){
             ref <- methylumi::betas(reference)
-        } else if (class(reference) %in% c("MethylSet", "RGChannelSetExtended", "RGChannelSet", "GenomicRatioSet")){
+        } else if (class(reference) %in% c("MethylSet",
+                                           "RGChannelSetExtended",
+                                           "RGChannelSet",
+                                           "GenomicRatioSet")){
             ref <- minfi::getBeta(reference)
         }
         commonprobe <- intersect(as.character(rownames(dataset)), as.character(rownames(ref)))
@@ -80,20 +90,19 @@ combData <- function(dataset, reference, cellTypes, class = c("rgset", "betas"),
         if (normType == "None") {
             if (class(reference) == "MethyLumiSet"){
                 ref.n <- methylumi::betas(reference)
-            } else if (class(reference) %in% c("RGChannelSetExtended", "RGChannelSet", "GenomicRatioSet")){
+            } else if (class(reference) %in% c("RGChannelSetExtended",
+                                               "RGChannelSet",
+                                               "GenomicRatioSet")){
                 ref.n <- minfi::getBeta(reference)
             }
             samp.n <- minfi::getBeta(dataset)
-            commonprobe <- intersect(as.character(rownames(ref.n)), as.character(rownames(samp.n)))
+            commonprobe <- intersect(as.character(rownames(ref.n)),
+                                     as.character(rownames(samp.n)))
             ref.n <- ref.n[commonprobe, ]
             samp.n <- samp.n[commonprobe, ]
 
         } else { # Combine all the datasets and normalize
-            if(min(nrow(dataset), nrow(reference)) > 622400) {
-                combRGset <- minfi::combineArrays(dataset, reference, outType = "IlluminaHumanMethylationEPIC")
-            } else {
-                combRGset <- minfi::combineArrays(dataset, reference, outType = "IlluminaHumanMethylation450k")
-            }
+            combRGset <- .combineArrays(dataset, reference)
             combRGset.N <- processMethod(combRGset)
             comb.n <- minfi::getBeta(combRGset.N)
             samp.n <- comb.n[, colnames(dataset)]
@@ -101,12 +110,19 @@ combData <- function(dataset, reference, cellTypes, class = c("rgset", "betas"),
         }
 
     }
-    combMeta <- data.frame(sampleNames = c(colnames(samp.n), colnames(ref.n)),
-                           studyIndex = rep(c("user", "reference"), times = c(ncol(samp.n), ncol(ref.n))),
-                           cellType = c(sampCT, as.character(minfi::pData(reference)$CellType)),
-                           stringsAsFactors = FALSE)
+    combMeta <- data.frame(
+        sampleNames = c(colnames(samp.n), colnames(ref.n)),
+        studyIndex = rep(c("user", "reference"),
+                         times = c(ncol(samp.n), ncol(ref.n))),
+        cellType = c(sampCT, as.character(minfi::pData(reference)$CellType)),
+        stringsAsFactors = FALSE
+        )
     rownames(combMeta) <- combMeta$sampleNames
     refMeta <- combMeta[combMeta$studyIndex == "reference", ]
     sampMeta <- combMeta[combMeta$studyIndex == "user", ]
-    return(list(samp.n = samp.n, ref.n = ref.n, refMeta = refMeta, sampMeta = sampMeta, cellTypes = cellTypes))
+    return(list(samp.n = samp.n, ref.n = ref.n,
+                refMeta = refMeta, sampMeta = sampMeta,
+                cellTypes = cellTypes))
 }
+
+

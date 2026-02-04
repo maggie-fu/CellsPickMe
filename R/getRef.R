@@ -3,7 +3,7 @@
 #' @importFrom rlang .data
 #'
 #' @param ref A character representing the reference dataset, with the options of
-#' "Reinius", "IDOL", "IDOL_extended", "Mixed", "Cord", "DLPFC", and "Middleton"
+#' "Reinius", "IDOL", "Extended", "Mixed", "Cord", "DLPFC", and "Middleton"
 #' @param normType a character representing the normalization method, with the
 #' options of "None", "Noob", "Funnorm", "Quantile"
 #'
@@ -50,7 +50,6 @@ getRef <- function(ref = c("Reinius", "IDOL", "Extended",
     ### Extended (adult blood) reference
     if(ref == "Extended"){
         reference <- hub[["EH5425"]]
-        n
         cellTypes <- c("Bas", "Bmem", "Bnv", "CD4mem", "CD4nv",
                        "CD8mem", "CD8nv", "Eos", "Mono", "Neu", "NK", "Treg")
     }
@@ -67,7 +66,7 @@ getRef <- function(ref = c("Reinius", "IDOL", "Extended",
         dir <- tempdir()
         curl::curl_download("https://zenodo.org/api/records/15204839/files/UniBlood7.rda/content",
                       paste0(dir, "/UniBlood7.rda"), quiet = FALSE)
-        reference <- loadRData(paste0(dir, "/UniBlood7.rda"))
+        reference <- .loadRData(paste0(dir, "/UniBlood7.rda"))
         cellTypes <- c("CD8T", "CD4T", "NK", "Bcell", "Mono", "Gran", "nRBC")
     }
     ### UniBlood13 (adult+cord blood) reference
@@ -76,7 +75,7 @@ getRef <- function(ref = c("Reinius", "IDOL", "Extended",
         dir <- tempdir()
         curl::curl_download("https://zenodo.org/api/records/15204843/files/UniBlood13.rda/content",
                       paste0(dir, "/UniBlood13.rda"), quiet = FALSE)
-        reference <- loadRData(paste0(dir, "/UniBlood13.rda"))
+        reference <- .loadRData(paste0(dir, "/UniBlood13.rda"))
         cellTypes <- c("Bmem", "Bnv", "CD8mem", "CD8nv",
                        "CD4mem", "CD4nv", "Treg",
                        "Bas", "Eos", "Neu", "Mono", "NK", "nRBC")
@@ -87,7 +86,7 @@ getRef <- function(ref = c("Reinius", "IDOL", "Extended",
         dir <- tempdir()
         curl::curl_download("https://zenodo.org/api/records/15204848/files/UniBlood19.rda/content",
                       paste0(dir, "/UniBlood19.rda"), quiet = FALSE)
-        reference <- loadRData(paste0(dir, "/UniBlood19.rda"))
+        reference <- .loadRData(paste0(dir, "/UniBlood19.rda"))
         cellTypes <- c("Bcell_cord", "Bmem", "Bnv",
                        "CD8T_cord", "CD8mem", "CD8nv",
                        "CD4T_cord", "CD4mem", "CD4nv", "Treg",

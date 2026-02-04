@@ -9,7 +9,7 @@
 
 <!-- badges: end -->
 
-<img src="man/figures/logo2.png" width="25%" height="25%" />
+<img src="man/figures/logo2.png" alt="" width="25%" height="25%" />
 
 The **CellsPickMe** package takes DNA methylation (DNAme) data generated
 from Illumina microarray of a heterogeneous tissue and predict its
@@ -99,7 +99,7 @@ probes <- pickProbes(dataNormed = comb_dat,
 #> Estimating Weights for Cell Type Prediction Based on Selected Probeset.
 ```
 
-<img src="man/figures/README-pickProbes1-1.png" width="100%" />
+<img src="man/figures/README-pickProbes1-1.png" alt="" width="100%" />
 
 Alternatively, here are some options for machine-learning-based feature
 selection.
@@ -271,7 +271,7 @@ ggplot(plt, aes(variable, value, color = variable)) +
     theme(axis.text.x = element_text(angle = 45, vjust = 0.9, hjust = 1))
 ```
 
-<img src="man/figures/README-visualization-1.png" width="100%" />
+<img src="man/figures/README-visualization-1.png" alt="" width="100%" />
 
 ## Citation
 

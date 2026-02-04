@@ -2,7 +2,7 @@
 #'
 #' @param dataNormed A list of dataframe containing the normalized data, output of `combData()`
 #' @param probes A list of probes to perform cell type prediction with and their corresponding coefficient, output of `pickProbes()`
-#' @param method A character specifying the regression method. Options include "CP", "RPC", and "SVR"
+#' @param method A character specifying the regression method. Options include "CP", "EPC", and "SVR"
 #' @param conditions A character specifying specific conditions for model fitting. Default is NULL
 #' @param removenRBC A Boolean specifying whether nucleated red blood cell (nRBC) proportion should be estimated, if using a reference with nRBC
 #' @param verbose A Boolean specifying whether the function should be verbose or not
@@ -23,15 +23,17 @@
 #' # Estimate cell type proportion
 #' out <- predictCT(dataNormed = comb_dat, probes = probes, method = "CP", cetygo = TRUE)
 
-predictCT <- function(dataNormed, probes, method, conditions = NULL, removenRBC = F, verbose = TRUE, cetygo = TRUE){
+predictCT <- function(dataNormed, probes, method, conditions = NULL,
+                      removenRBC = F, verbose = TRUE, cetygo = TRUE){
     if (verbose)
         cat("Estimating Composition Based on Selected Projection Method.\n")
-    projectionMethod <- get(method)
+    projectionMethod <- get(paste0(".", tolower(method)))
 
     if (probes$probeList %in% c("Caret_LOOCV", "Caret_CV")){
         out <- lapply(probes$coefs$probeCoefs, function(coefs){
             if(nrow(coefs) <= ncol(coefs)) {
-                message("There are fewer features than the number of cell types you're trying to predict! skipping this prediction")
+                message("There are fewer features than the number of cell types
+                        you're trying to predict! skipping this prediction")
             } else {
                 mat <- dataNormed$samp.n[rownames(coefs), ]
                 mat <- as.matrix(mat[stats::complete.cases(mat), ])
@@ -51,7 +53,7 @@ predictCT <- function(dataNormed, probes, method, conditions = NULL, removenRBC 
                 if(cetygo){
                     YIN <- dataNormed$samp.n[rownames(coefs), ]
                     CETYGO <- sapply(seq_len(nrow(counts)), function(x) {
-                        getErrorPerSample(applyIndex = x,
+                        .getErrorPerSample(applyIndex = x,
                                           predictedIN = counts,
                                           coefDataIN = coefs,
                                           betasBulkIN = YIN)
@@ -83,7 +85,7 @@ predictCT <- function(dataNormed, probes, method, conditions = NULL, removenRBC 
         if(cetygo){
             YIN <- dataNormed$samp.n[rownames(coefs), ]
             CETYGO <- sapply(seq_len(nrow(counts)), function(x) {
-                getErrorPerSample(applyIndex = x,
+                .getErrorPerSample(applyIndex = x,
                                   predictedIN = counts,
                                   coefDataIN = coefs,
                                   betasBulkIN = YIN)

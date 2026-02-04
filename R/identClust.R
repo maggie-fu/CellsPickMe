@@ -27,7 +27,7 @@ identClust <- function(dataNormed, probes , parallel = TRUE) {
     if(probes$probeList %in% c("Caret_CV", "Caret_LOOCV")) {
         out <- lapply(probes$coefs$probeCoefs, function(caretMod){
             clustout <- pvclust::pvclust(dataNormed$ref.n[rownames(caretMod), ], parallel = parallel)
-            pvClust <- hc2split(clustout$hclust)$member
+            pvClust <- .hc2split(clustout$hclust)$member
             ctClust <- sapply(dataNormed$cellType, function(x){
                 return(which(dataNormed$refMeta$cellType == x))
             })
@@ -39,7 +39,7 @@ identClust <- function(dataNormed, probes , parallel = TRUE) {
         })
     } else {
         clustout <- pvclust::pvclust(dataNormed$ref.n[rownames(probes$coefs), ], parallel = parallel)
-        pvClust <- hc2split(clustout$hclust)$member
+        pvClust <- .hc2split(clustout$hclust)$member
         ctClust <- sapply(comb_dat$cellType, function(x){
             return(which(comb_dat$refMeta$cellType == x))
         })

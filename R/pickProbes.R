@@ -62,7 +62,7 @@ pickProbes <- function(dataNormed,
     if (verbose)
         cat("Estimating Weights for Cell Type Prediction Based on Selected Probeset.\n")
     if (probeList == "Ttest") {
-        coefs <- pickCompProbes2(betas = dataNormed$ref.n,
+        coefs <- .pickCompProbes2(betas = dataNormed$ref.n,
                                  meta = dataNormed$refMeta,
                                  ct = dataNormed$cellTypes,
                                  nP = nProbes,
@@ -117,7 +117,7 @@ pickProbes <- function(dataNormed,
         # if (probeList == "DHS") {
         #     pLib <- DHS
         # }
-        coefs <- pickCompProbes2(betas = dataNormed$ref.n,
+        coefs <- .pickCompProbes2(betas = dataNormed$ref.n,
                                  meta = dataNormed$refMeta,
                                  ct = dataNormed$cellTypes,
                                  nP = nProbes,

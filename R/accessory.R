@@ -41,7 +41,7 @@
 # rgSetOutv1 <- combineArrays(rgSet1 = rgSetv1,
 #                             rgSet2 = rgSetv2)
 # input order does not matter here
-.convertArray <- function(rgSet,
+convertArray <- function(rgSet,
                          outType = c("IlluminaHumanMethylation450k",
                                      "IlluminaHumanMethylationEPIC",
                                      "IlluminaHumanMethylationEPICv2"),
@@ -210,10 +210,10 @@
 
 ### Combine multiple array types
 # Example usage:
-# rgSetv1 <- .convertArray(rgSetv2,
+# rgSetv1 <- convertArray(rgSetv2,
 #                         outType = "IlluminaHumanMethylationEPIC",
 #                         verbose = T)
-.combineArrays <- function(rgSet1, rgSet2,
+combineArrays <- function(rgSet1, rgSet2,
                            outType = NULL){
 
     # Check to see if we have sensible inputs
@@ -241,10 +241,10 @@
         stop("These array types cannot be combined.")
     } else {
         if(anno1 != outType) {
-            rgSet1 <- .convertArray(rgSet1, outType = outType, verbose = verbose)
+            rgSet1 <- convertArray(rgSet1, outType = outType, verbose = verbose)
         }
         if(anno2 != outType) {
-            rgSet2 <- .convertArray(rgSet2, outType = outType, verbose = verbose)
+            rgSet2 <- convertArray(rgSet2, outType = outType, verbose = verbose)
         }
         features <- intersect(rownames(rgSet1),
                               rownames(rgSet2))

@@ -102,7 +102,7 @@ combData <- function(dataset, reference, cellTypes, class = c("rgset", "betas"),
             samp.n <- samp.n[commonprobe, ]
 
         } else { # Combine all the datasets and normalize
-            combRGset <- .combineArrays(dataset, reference)
+            combRGset <- combineArrays(dataset, reference)
             combRGset.N <- processMethod(combRGset)
             comb.n <- minfi::getBeta(combRGset.N)
             samp.n <- comb.n[, colnames(dataset)]
